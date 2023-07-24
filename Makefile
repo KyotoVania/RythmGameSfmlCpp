@@ -16,7 +16,7 @@ CC = g++
 CFLAGS = -Wall -Wextra -Iinclude -g3 -fopenmp -pthread
 ASAN_FLAGS = -O1 -g -fsanitize=address -fno-omit-frame-pointer
 #need to add sfml-graphics
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lconfig++
 # Directories
 SRCDIR = src
 OBJDIR = obj
