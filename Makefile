@@ -23,10 +23,9 @@ OBJDIR = obj
 BINDIR = .
 
 # Files
-SRCS = $(wildcard $(SRCDIR)/*.cpp)
+SRCS = $(wildcard $(SRCDIR)/**/*.cpp $(SRCDIR)/*.cpp)
 OBJS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 EXEC = $(BINDIR)/YinYang
-
 # Targets
 all: $(EXEC)
 	@echo "$(GREEN)Compilation successful!$(NC)"
@@ -36,6 +35,7 @@ $(EXEC): $(OBJS)
 	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
 	@echo "$(YELLOW)Compiling $<...$(NC)"
 	@$(CC) $(CFLAGS) -c $< -o $@ && \
 	echo "$(GREEN)Compiled $< successfully!$(NC)" || \
@@ -52,6 +52,6 @@ re: fclean all
 
 fclean: clean
 	@echo "$(RED)Removing object files...$(NC)"
-	@rm -f $(OBJS)
+	@rm -rf $(OBJDIR)
 
-.PHONY: all clean debug
+.PHONY: all clean debug re fclean

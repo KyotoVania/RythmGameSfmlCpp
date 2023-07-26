@@ -1,7 +1,27 @@
-Input = "";
-fps = "";
-height = "";
-player = "";
-theme = "";
-title = "";
-width = "";
+{
+  "GUI": {
+    "title": "LESCOPAINGS",
+    "res": {
+      "width": 800,
+      "height": 600
+    },
+    "fps": 60,
+    "theme": {
+      "id": 1,
+      "name": "default"
+    }
+  },
+  "player": {
+    "name": "TokyoVania",
+    "id": 1,
+    "level": 1,
+    "accuracy": 100,
+    "Input": {
+      "up": "w",
+      "down": "s",
+      "left": "a",
+      "right": "d",
+      "action": "space"
+    }
+  }
+}

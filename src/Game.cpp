@@ -1,8 +1,7 @@
+
+/*
 #include "Game.hpp"
 
-/**
- * Main function. Handles all user input.
- */
 void Game::handleCollision()
 {
     if (player->gotHit == true )
@@ -250,10 +249,6 @@ void Game::getMovements()
 
 
 
-/**
- * Game constructor
- * Sets parameters for window.
- */
 Game::Game(char **argv, int argc)
 {
     ContextSettings settings;
@@ -290,9 +285,7 @@ Game::Game(char **argv, int argc)
     grades[7500] = "A";
 }
 
-/**
- * Starts up current mode.
- */
+
 void Game::initialize_mode(const std::string& mode_name, const std::string& song_name)
 {
 
@@ -307,9 +300,6 @@ void Game::initialize_mode(const std::string& mode_name, const std::string& song
     }
 }
 
-/**
- * Starts up player.
- */
 
 void Game::initialize_player()
 {
@@ -328,3 +318,5 @@ std::string Game::getGradeFromScore(int score)
     }
     return grade;
 }
+
+ */
