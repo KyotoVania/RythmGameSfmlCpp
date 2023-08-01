@@ -27,13 +27,13 @@ void loadConfigAndDatabase(Config& config, Database& database) {
     cout << "printed database" << endl;
 }
 
-void applyConfig(const Config& config, GUI& gui) {
+void applyConfig(const Config& config, GUI& gui, Database& database) {
     gui.load(config.getGUIConfig());
     cout << "loaded gui" << endl;
     gui.loadingScreenCreate();
 
     // Start loading assets in a separate thread
-    auto future = std::async(std::launch::async, [&gui](){
+    auto future = std::async(std::launch::async, [&gui, &database](){
         for (int i = 0; i <= 100; i++) {
             // Simulate loading assets
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -41,8 +41,10 @@ void applyConfig(const Config& config, GUI& gui) {
             if (i == 10) {
                 gui.createMenu();
             }
+            if (i == 20) {
+                gui.loadBeatmapPanel(database);
+            }
         }
-        // Create the menu after loading assets
     });
 
     // Wait for the loading to finish
@@ -61,7 +63,7 @@ int main (int argc, char** argv)
     GUI gui;
     Database database;
     loadConfigAndDatabase(config, database);
-    applyConfig(config, gui);
+    applyConfig(config, gui, database);
     //Game game (argv, argc);
     //game.run();
     std::cout << "vizualizer ran" << std::endl;

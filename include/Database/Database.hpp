@@ -21,6 +21,7 @@ class Database {
         void print();
         bool isBeatmapExist(int id);
         int getNbBeatmaps() const { return beatmaps.size(); }
+        BeatmapConfig getBeatmap(int id) { return beatmaps[id]; }
 	protected:
         map<int, BeatmapConfig> beatmaps;
 	private:

@@ -17,8 +17,11 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 using namespace std;
 #include "GraphicElement/Button.hpp"
+#include "Database/Database.hpp"
+#include "GraphicElement/BeatmapPanel.hpp"
 //#include "GraphicElement/TriangleButton.hpp"
 //TODO: BANNER
 
@@ -29,11 +32,17 @@ Menu();
 void load(const std::pair<int, int>& res);
 void update(const sf::Event& event, const sf::RenderWindow& window);
 void draw(sf::RenderWindow& window);
+    void loadBeatmaps(Database& database);
+    void slideLeft();
+    void slideRight();
 protected:
     map<string, Button> buttons;
     map<string, sf::Text> texts;
     map<string, sf::Texture> textures;
     map<string, sf::Sprite> sprites;
+    //add the beatmap panel
+    std::vector<BeatmapPanel> beatmapPanel;
+
     map<string, sf::Font> fonts;
     int theme = 0;
 private:

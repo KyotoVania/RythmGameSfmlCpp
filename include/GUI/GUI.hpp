@@ -15,6 +15,7 @@
 #include <vector>
 #include "GUI/GUIConfig.hpp"
 #include "GraphicElement/LoadingScreen.hpp"
+#include "Database/Database.hpp"
 #include "Menu/Menu.hpp"
 
 enum gameState {
@@ -31,6 +32,7 @@ class GUI {
 		GUI();
 		~GUI();
         void load(const GUIConfig& config);
+        void loadBeatmapPanel(Database& database);
         void loadingScreenCreate();
         void updateLoadingScreen(int pourcent);
         void createMenu();

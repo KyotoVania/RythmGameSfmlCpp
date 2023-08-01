@@ -43,6 +43,13 @@ void GUI::updateLoadingScreen(int percent) {
     loadingScreen.draw(window);
     window.display();
 }
+
+void GUI::loadBeatmapPanel(Database& database)
+{
+    //this function will create the beatmap panel
+    menu.loadBeatmaps(database);
+}
+
 void GUI::createMenu()
 {
     //this function will create the menu
