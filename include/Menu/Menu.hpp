@@ -18,22 +18,23 @@
 #include <fstream>
 #include <sstream>
 using namespace std;
-#include "GraphicElement/RectangleButton.hpp"
+#include "GraphicElement/Button.hpp"
 //#include "GraphicElement/TriangleButton.hpp"
 //TODO: BANNER
-
-
 
 class Menu {
 public:
 Menu();
 ~Menu();
-
+void load(const std::pair<int, int>& res);
+void update(const sf::Event& event, const sf::RenderWindow& window);
+void draw(sf::RenderWindow& window);
 protected:
-    vector<map<string, pair<Button *, std::function<void(int)>>>> buttons;
-    vector<map<string, sf::Text>> texts;
-    vector<map<string, sf::Texture>> textures;
-    vector<map<string, sf::Sprite>> sprites;
+    map<string, Button> buttons;
+    map<string, sf::Text> texts;
+    map<string, sf::Texture> textures;
+    map<string, sf::Sprite> sprites;
+    map<string, sf::Font> fonts;
     int theme = 0;
 private:
 };

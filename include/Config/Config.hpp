@@ -17,11 +17,13 @@ using namespace std;
 
 class Config {
 public:
-    Config(string file);
+    Config();
     ~Config();
     void load(const std::string& file);
     void save(const std::string& file);
     void print();
+    GUIConfig getGUIConfig() const;
+    PlayerConfig getPlayerConfig() const;
 private:
     // Static members to store the configuration values
     string path;

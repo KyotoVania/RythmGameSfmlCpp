@@ -1,15 +1,11 @@
-/*
-** EPITECH PROJECT, 2023
-** Yiang
-** File description:
-** Button.hpp
-*/
+// Button.hpp
 #ifndef BUTTON_HPP_
-	#define BUTTON_HPP_
+#define BUTTON_HPP_
 
+#include <functional>
 #include <SFML/Graphics.hpp>
 #include <string>
-
+#include <iostream>
 enum ButtonType {
     RECTANGLE,
     TRIANGLE,
@@ -24,18 +20,25 @@ enum ButtonState {
     DISABLED
 };
 
+
 class Button {
-protected:
-    sf::Vector2f position;
-    sf::Shape* shape;
-    sf::Text text;
-
 public:
-    Button(sf::Vector2f position, sf::Shape* shape,
-    const std::string& buttonText, sf::Font& font, sf::Color color, int size);
-    virtual ~Button();
-    bool isMouseOver(sf::Vector2f mousePosition) const;
-    virtual void draw(sf::RenderWindow& window);
-};
+    Button();
+    Button(const sf::Texture& texture, const sf::Vector2f& position, std::function<void()> onClick, std::pair<int, int> res);
+    ~Button();
 
+    void handleEvent(const sf::Event& event, const sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window);
+    void setText(const std::string& text, const sf::Font& font, unsigned int characterSize);
+
+private:
+    sf::Texture texture;
+    sf::Sprite sprite;
+    sf::Text text;
+    std::function<void()> onClick;
+    ButtonState state;
+    sf::Vector2f position;
+    sf::Vector2f size;
+    ButtonType type;
+};
 #endif /*BUTTON_HPP_*/

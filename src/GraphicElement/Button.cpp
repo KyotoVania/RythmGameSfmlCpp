@@ -7,31 +7,47 @@
 
 #include "GraphicElement/Button.hpp"
 
-Button::Button(sf::Vector2f position, sf::Shape* shape,
-    const std::string& buttonText, sf::Font& font, sf::Color color, int size) {
-    this->position = position;
-    this->shape = shape;
-    this->shape->setFillColor(color);
-
-    this->text.setString(buttonText);
-    this->text.setFont(font);
-    this->text.setCharacterSize(size);
-    this->text.setPosition(position.x + shape->getGlobalBounds().width / 2 -
-    this->text.getGlobalBounds().width / 2, position.y +
-    shape->getGlobalBounds().height / 2 - this->text.getGlobalBounds().height / 2);
+Button::Button() {
 }
+
+Button::Button(const sf::Texture& texture, const sf::Vector2f& position, std::function<void()> onClick, std::pair<int, int> res)
+        : onClick(onClick)
+{
+    sprite.setTexture(texture);
+    // Convert position from normalized coordinates to pixel coordinates
+    sf::Vector2f pixelPosition;
+    pixelPosition.x = position.x / 100.0f * res.first;
+    pixelPosition.y = position.y / 100.0f * res.second;
+    sprite.setPosition(pixelPosition);
+}
+
 
 Button::~Button() {
-    delete shape;
-    delete &text;
 }
 
-bool Button::isMouseOver(sf::Vector2f mousePosition) const {
-    return shape->getGlobalBounds().contains(mousePosition);
+void Button::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        if (sprite.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+            onClick();
+        }
+
+    }
 }
+
 
 void Button::draw(sf::RenderWindow& window) {
-    shape->setPosition(position);
-    window.draw(*shape);
-    window.draw(text);
+    window.draw(sprite);
+}
+
+
+// Button.cpp
+void Button::setText(const std::string& text, const sf::Font& font, unsigned int characterSize) {
+    this->text.setString(text);
+    this->text.setFont(font);
+    this->text.setCharacterSize(characterSize);
+    // Center the text in the button
+    sf::FloatRect textRect = this->text.getLocalBounds();
+    this->text.setOrigin(textRect.left + textRect.width/2.0f, textRect.top  + textRect.height/2.0f);
+    this->text.setPosition(sf::Vector2f(position.x + size.x/2.0f, position.y + size.y/2.0f));
 }

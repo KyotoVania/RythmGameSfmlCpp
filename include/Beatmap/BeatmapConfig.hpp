@@ -9,21 +9,29 @@
 
 #include <string>
 #include <map>
+#include <iostream>
+#include <libconfig.h++>
 using namespace std;
 class BeatmapConfig {
 	public:
         BeatmapConfig();
         ~BeatmapConfig();
-
-	protected:
+        void load(const libconfig::Setting& beatmapSetting);
+        void print();
+        int id;
+        string getFolderPath() const { return FolderPath; }
+        string getName() const { return Name; }
+        string getArtist() const { return Artist; }
+        int getDifficulty() const { return Difficulty; }
+protected:
         string Name;
         string Artist;
         string FolderPath;
         int Difficulty;
         int BPM;
-        int id;
         int offset;
 	private:
+
 };
 
 #endif /*BEATMAPCONFIG_HPP_*/

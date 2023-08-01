@@ -31,3 +31,32 @@ void GUIConfig::print() {
     cout << "res: " << res.first << "x" << res.second << endl;
     cout << "theme: " << theme.id << " " << theme.name << endl;
 }
+
+pair<int, int> GUIConfig::getResolution() const {
+    return res;
+}
+
+string GUIConfig::getTitle() const {
+    return title;
+}
+
+int GUIConfig::getFPS() const {
+    return fps;
+}
+
+themeData GUIConfig::getTheme() const {
+    return theme;
+}
+
+void GUIConfig::setResolution(pair<int, int> res) {
+    this->res = res;
+}
+
+void GUIConfig::setFPS(int fps) {
+    this->fps = fps;
+}
+
+void GUIConfig::setTheme(themeData theme) {
+    this->theme = theme;
+}
+

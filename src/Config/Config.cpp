@@ -6,9 +6,7 @@
 */
 #include "Config/Config.hpp"
 
-Config::Config(string path) {
-    this->path = path;
-    this->load(path);
+Config::Config() {
 }
 
 Config::~Config() {
@@ -46,4 +44,8 @@ void Config::print() {
     guiConfig.print();
     std::cout << "Player:" << std::endl;
     playerConfig.print();
+}
+
+GUIConfig Config::getGUIConfig() const {
+    return guiConfig;
 }

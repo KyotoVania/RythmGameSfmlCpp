@@ -11,7 +11,6 @@ class Beatmap {
 	public:
 		Beatmap();
 		~Beatmap();
-
 	protected:
 	private:
 };

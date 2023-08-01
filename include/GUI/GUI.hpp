@@ -9,6 +9,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
+#include <iostream>
+#include <string>
+#include <vector>
+#include "GUI/GUIConfig.hpp"
+#include "GraphicElement/LoadingScreen.hpp"
+#include "Menu/Menu.hpp"
 
 enum gameState {
     MAIN_MENU,
@@ -23,13 +30,22 @@ class GUI {
 	public:
 		GUI();
 		~GUI();
-	protected:
+        void load(const GUIConfig& config);
+        void loadingScreenCreate();
+        void updateLoadingScreen(int pourcent);
+        void createMenu();
+        void updateMenu();
+        void loop();
+protected:
         sf::RenderWindow window;
         sf::Event event;
         sf::Vector2i mousePos;
         sf::Vector2f mousePosF;
         int gameState = MAIN_MENU;
-    private:
+        Menu menu;
+        LoadingScreen loadingScreen;
+
+private:
 };
 
 #endif /*GUI_HPP_*/

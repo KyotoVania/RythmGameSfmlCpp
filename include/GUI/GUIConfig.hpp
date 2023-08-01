@@ -25,10 +25,10 @@ class GUIConfig {
         void setTitle(string title);
         void setFPS(int fps);
         void setTheme(themeData theme);
-        pair<int, int> getResolution();
-        string getTitle();
-        int getFPS();
-        themeData getTheme();
+        pair<int, int> getResolution() const;
+        string getTitle() const;
+        int getFPS() const;
+        themeData getTheme() const;
         void load(const libconfig::Setting& guiSetting);
         void print();
 
