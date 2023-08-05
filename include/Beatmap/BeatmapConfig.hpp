@@ -23,7 +23,7 @@ class BeatmapConfig {
         string getName() const { return Name; }
         string getArtist() const { return Artist; }
         int getDifficulty() const { return Difficulty; }
-protected:
+    protected:
         string Name;
         string Artist;
         string FolderPath;

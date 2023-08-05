@@ -47,6 +47,8 @@ void Menu::load(const std::pair<int, int>& res)
         buttons[buttonName].setText(std::to_string(i), font, 30); // You need to load the font somewhere before this
     }
 
+    this->_res = res;
+
 }
 
 
@@ -56,28 +58,26 @@ void Menu::loadBeatmaps(Database& database) {
         if (beatmap.getFolderPath() == "") {
             continue;
         }
-        sf::Texture texture;
-        std::string texturePath = "Resources/Beatmaps/"
-                                  + beatmap.getFolderPath() + "/Cover.png"; // Assuming the cover image is named "cover.png"
-        if (!texture.loadFromFile(texturePath)) {
-            cout << "Error loading texture " << texturePath << endl;
+
+        // Load the cover texture
+        std::string coverTexturePath = "Resources/Beatmaps/"
+                                       + beatmap.getFolderPath() + "/Cover.png"; // Assuming the cover image is named "cover.png"
+        sf::Texture& coverTexture = textures[coverTexturePath];
+        if (!coverTexture.loadFromFile(coverTexturePath)) {
+            cout << "Error loading texture " << coverTexturePath << endl;
             // Handle error...
         }
-        textures[texturePath] = texture;
-        sf::Sprite sprite(texture);
-        sprites[texturePath] = sprite;
 
         // Load the panel texture
-        sf::Texture panelTexture;
         std::string panelTexturePath = "Resources/UI/MainPanel01.png"; // Assuming the panel image is named "MainPanel01.png"
+        sf::Texture& panelTexture = textures[panelTexturePath];
         if (!panelTexture.loadFromFile(panelTexturePath)) {
             cout << "Error loading texture " << panelTexturePath << endl;
             // Handle error...
         }
-        textures[panelTexturePath] = panelTexture;
 
         // Create a BeatmapPanel object and add it to the beatmapPanel vector
-        BeatmapPanel panel(panelTexture, texture, sf::Vector2f(0, 0), std::pair<int, int>(0, 0), "S"); // You may need to adjust the parameters here
+        BeatmapPanel panel(panelTexture, coverTexture, sf::Vector2f(5, 5), _res , "S"); // You may need to adjust the parameters here
         beatmapPanel.push_back(panel);
     }
 }
@@ -95,11 +95,11 @@ void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
     // Adjust the panels
     for (int i = 0; i < beatmapPanel.size(); ++i) {
         if (i < selectedPanel) {
-            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(-200, -100));
+            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(-2, -1), res);
         } else if (i > selectedPanel) {
-            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(200, -100));
+            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(2, -1), res);
         } else {
-            beatmapPanel[i].adjust(1.0f, 255, sf::Vector2f(0, 0));
+            beatmapPanel[i].adjust(1.0f, 255, sf::Vector2f(0, 0), res);
         }
     }
 }

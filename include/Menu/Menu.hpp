@@ -42,8 +42,8 @@ protected:
     map<string, sf::Sprite> sprites;
     //add the beatmap panel
     std::vector<BeatmapPanel> beatmapPanel;
-
     map<string, sf::Font> fonts;
+    pair<int, int> _res = {0, 0};
     int theme = 0;
 private:
 };
