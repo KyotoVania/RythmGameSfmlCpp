@@ -77,7 +77,7 @@ void Menu::loadBeatmaps(Database& database) {
         }
 
         // Create a BeatmapPanel object and add it to the beatmapPanel vector
-        BeatmapPanel panel(panelTexture, coverTexture, sf::Vector2f(5, 5), _res , "S"); // You may need to adjust the parameters here
+        BeatmapPanel panel(panelTexture, coverTexture, sf::Vector2f(5, 5), _res , "S", fonts["sansation"]);
         beatmapPanel.push_back(panel);
     }
 }
@@ -90,16 +90,16 @@ void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
     }
 
     // Determine the selected panel
-    int selectedPanel = 0; // This should be updated based on user input
+    int selectedPanel = 1; // This should be updated based on user input
 
     // Adjust the panels
     for (int i = 0; i < beatmapPanel.size(); ++i) {
         if (i < selectedPanel) {
-            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(0, 0), _res);
+            beatmapPanel[i].adjust(0.5f, 128, sf::Vector2f(2, 4), _res);
         } else if (i > selectedPanel) {
-            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(7, 0), _res);
+            beatmapPanel[i].adjust(0.5f, 128, sf::Vector2f(8, 4), _res);
         } else {
-            beatmapPanel[i].adjust(1.0f, 255, sf::Vector2f(5, 0), _res);
+            beatmapPanel[i].adjust(0.8f, 255, sf::Vector2f(5, 5), _res);
         }
     }
 }

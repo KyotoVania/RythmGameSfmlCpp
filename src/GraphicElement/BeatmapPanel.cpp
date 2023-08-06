@@ -13,7 +13,7 @@ BeatmapPanel::BeatmapPanel(){
 
 }
 
-BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, std::string Grade)
+BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, std::string Grade, sf::Font fonts)
 {
     // Normalize the position
     float normalizedX = std::fmod(position.x, 10.0f) / 10.0f;
@@ -31,11 +31,17 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
     // Assuming the cover is a smaller sprite displayed on the panel
     coverSprite.setTexture(textureCover);
     coverSprite.setPosition(position); // Adjust this as needed
-
+    _font = sf::Font(fonts);
+    gradeText.setFont(_font);
+    std::cout << "Creating grade text" << std::endl;
     // Assuming grade is a text displayed on the panel
-    gradeText.setString(Grade);
-    gradeText.setPosition(position); // Adjust this as needed
-    // Don't forget to set the font and character size for the text
+    //load font "Resources/Fonts/sansation.ttf"
+    textSize = 250;
+    gradeText.setCharacterSize(textSize); // Adjust this as needed
+    gradeText.setString("S");
+    gradeText.setPosition(0, 0); // Adjust this as needed
+        // Don't forget to set the font and character size for the text
+    std::cout << "Creating grade text" << std::endl;
 }
 
 BeatmapPanel::~BeatmapPanel(){
@@ -44,8 +50,9 @@ BeatmapPanel::~BeatmapPanel(){
 
 void BeatmapPanel::draw(sf::RenderWindow& window) {
     window.draw(sprite);
-    //window.draw(coverSprite);
-   // window.draw(gradeText);
+    window.draw(coverSprite);
+    gradeText.setFont(_font);
+    window.draw(gradeText);
     //       std::cout << "Drawing panel" << std::endl;
 }
 
@@ -59,27 +66,31 @@ void BeatmapPanel::setText(const std::string& text, const sf::Font& font, unsign
     gradeText.setPosition(sf::Vector2f(position.x + size.x/2.0f, position.y + size.y/2.0f));
 }
 
+void BeatmapPanel::adjustPanel(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res) {
+
+}
+
+void BeatmapPanel::adjustCover(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res) {
+}
+void BeatmapPanel::adjustGrade(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res) {
+}
 void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res) {
-    float normalizedOffsetX = std::fmod(offset.x, 10.0f) / 10.0f;
-    float normalizedOffsetY = std::fmod(offset.y, 10.0f) / 10.0f;
-
-    // Calculate the screen offset
-    float screenOffsetX = normalizedOffsetX * res.first;
-    float screenOffsetY = normalizedOffsetY * res.second;
-
-    std::cout << "Adjusting panel" << std::endl;
+    //we need to split the res by 10 to get the real resolution
+    float screenOffsetX = std::fmod(offset.x, 10.0f) / 10.0f * res.first;
+    float screenOffsetY = std::fmod(offset.y, 10.0f) / 10.0f * res.second;
+    float PercentX = res.first / 100.0f;
+    float PercentY = res.second / 100.0f;
+    std::cout << "PercentX : " << PercentX << " PercentY : " << PercentY << std::endl;
+    // Adjust the panel
     sprite.setScale(scale, scale);
     sprite.setColor(sf::Color(255, 255, 255, opacity));
-    std::cout << "position was : " << position.x << " " << position.y << std::endl;
-    std::cout << "offset was : " << offset.x << " " << offset.y << std::endl;
-    sprite.setPosition(screenOffsetX, screenOffsetY); // Set the position to the screen offset, not the current position
-    std::cout << "position is now : " << sprite.getPosition().x << " " << sprite.getPosition().y << std::endl;
-
+    screenOffsetX = screenOffsetX - (sprite.getTexture()->getSize().x * scale) / 2;
+    screenOffsetY = screenOffsetY - (sprite.getTexture()->getSize().y * scale) / 2;
+    sprite.setPosition(screenOffsetX, screenOffsetY); // Also set the position to the screen offset
     // Adjust the cover and text as well
     coverSprite.setScale(scale, scale);
     coverSprite.setColor(sf::Color(255, 255, 255, opacity));
-    coverSprite.setPosition(screenOffsetX, screenOffsetY); // Also set the position to the screen offset
-
-    gradeText.setCharacterSize(gradeText.getCharacterSize() * scale);
-    gradeText.setPosition(screenOffsetX, screenOffsetY); // Also set the position to the screen offset
+    coverSprite.setPosition(screenOffsetX + PercentX * 5, screenOffsetY + PercentY * 5); // Also set the position to the screen offset
+    gradeText.setCharacterSize(textSize * scale);
+    gradeText.setPosition(screenOffsetX + PercentX * 15, screenOffsetY + PercentY * 10); // Also set the position to the screen offset
 }
