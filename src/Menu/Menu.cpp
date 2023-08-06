@@ -95,11 +95,11 @@ void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
     // Adjust the panels
     for (int i = 0; i < beatmapPanel.size(); ++i) {
         if (i < selectedPanel) {
-            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(-2, -1), res);
+            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(0, 0), _res);
         } else if (i > selectedPanel) {
-            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(2, -1), res);
+            beatmapPanel[i].adjust(0.8f, 128, sf::Vector2f(7, 0), _res);
         } else {
-            beatmapPanel[i].adjust(1.0f, 255, sf::Vector2f(0, 0), res);
+            beatmapPanel[i].adjust(1.0f, 255, sf::Vector2f(5, 0), _res);
         }
     }
 }

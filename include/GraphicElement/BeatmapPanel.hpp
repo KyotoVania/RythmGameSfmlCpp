@@ -16,7 +16,7 @@ public:
     ~BeatmapPanel();
     void draw(sf::RenderWindow& window);
     void setText(const std::string& text, const sf::Font& font, unsigned int characterSize);
-    void adjust(float scale, float opacity, const sf::Vector2f& offset);
+    void adjust(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
 private:
     sf::Texture texture;
     sf::Sprite sprite;
