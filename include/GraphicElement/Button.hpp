@@ -20,7 +20,6 @@ enum ButtonState {
     DISABLED
 };
 
-
 class Button {
 public:
     Button();

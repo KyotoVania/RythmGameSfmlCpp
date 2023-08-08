@@ -19,6 +19,13 @@ Menu::~Menu()
 // Menu.cpp
 void Menu::load(const std::pair<int, int>& res)
 {
+    buttonConfigs = {
+            {"Slide Left", [this](){ this->slideLeft(); }},
+            {"Slide Right", [this](){ this->slideRight(); }},
+            {"Exit", [](){ std::cout << "Exiting..." << std::endl; /* Add exit logic here */ }},
+            {"Analyse", [](){ std::cout << "Analysing..." << std::endl; /* Add analyse logic here */ }},
+            // Add more configurations as needed
+    };
     // Load the background image
     sf::Texture& backgroundTexture = textures["background"];
     if (!backgroundTexture.loadFromFile("Resources/UI/Background.jpg")) {
@@ -41,16 +48,18 @@ void Menu::load(const std::pair<int, int>& res)
             // Handle error...
         }
         std::string buttonName = "button" + std::to_string(i);
-        buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), [buttonName](){
-            std::cout << "Button " << buttonName << " clicked!" << std::endl;
-        }, res));
-        buttons[buttonName].setText(std::to_string(i), font, 30); // You need to load the font somewhere before this
+        if (i - 1 < buttonConfigs.size()) { // Ensure we don't go out of bounds
+            buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), buttonConfigs[i-1].onClick, res));
+            buttons[buttonName].setText(buttonConfigs[i-1].text, font, 30);
+        } else {
+            buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), [](){}, res)); // Default empty function
+            buttons[buttonName].setText(std::to_string(i), font, 30);
+        }
     }
 
     this->_res = res;
 
 }
-
 
 void Menu::loadBeatmaps(Database& database) {
     for (int i = 0; i < database.getNbBeatmaps(); ++i) {
@@ -90,8 +99,7 @@ void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
     }
 
     // Determine the selected panel
-    int selectedPanel = 1; // This should be updated based on user input
-
+    int selectedPanel = selectedPanelIndex;
     // Adjust the panels
     for (int i = 0; i < beatmapPanel.size(); ++i) {
         if (i < selectedPanel) {
@@ -117,5 +125,19 @@ void Menu::draw(sf::RenderWindow& window)
     for (int i = beatmapPanel.size() - 1; i >= 0; --i) {
         beatmapPanel[i].draw(window);
     }
+}
+
+void Menu::slideLeft() {
+    if (selectedPanelIndex > 0) {
+        selectedPanelIndex--;
+    }
+    // You can add wrap-around logic here if you want the selection to loop back to the last panel when at the first panel.
+}
+
+void Menu::slideRight() {
+    if (selectedPanelIndex < beatmapPanel.size() - 1) {
+        selectedPanelIndex++;
+    }
+    // You can add wrap-around logic here if you want the selection to loop back to the first panel when at the last panel.
 }
 

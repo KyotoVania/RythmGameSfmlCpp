@@ -27,15 +27,20 @@ using namespace std;
 
 class Menu {
 public:
-Menu();
-~Menu();
-void load(const std::pair<int, int>& res);
-void update(const sf::Event& event, const sf::RenderWindow& window);
-void draw(sf::RenderWindow& window);
+    Menu();
+    ~Menu();
+    void load(const std::pair<int, int>& res);
+    void update(const sf::Event& event, const sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window);
     void loadBeatmaps(Database& database);
     void slideLeft();
     void slideRight();
+    struct ButtonConfig {
+        std::string text;
+        std::function<void()> onClick;
+    };
 protected:
+    int selectedPanelIndex = 0; // Add this line
     map<string, Button> buttons;
     map<string, sf::Text> texts;
     map<string, sf::Texture> textures;
@@ -45,6 +50,8 @@ protected:
     map<string, sf::Font> fonts;
     pair<int, int> _res = {0, 0};
     int theme = 0;
+    std::vector<ButtonConfig> buttonConfigs;
+
 private:
 };
 

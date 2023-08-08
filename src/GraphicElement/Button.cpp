@@ -19,6 +19,9 @@ Button::Button(const sf::Texture& texture, const sf::Vector2f& position, std::fu
     pixelPosition.x = position.x / 100.0f * res.first;
     pixelPosition.y = position.y / 100.0f * res.second;
     sprite.setPosition(pixelPosition);
+    this->position = pixelPosition; // Set the position member variable
+    this->size = sf::Vector2f(texture.getSize()); // Set the size member variable based on the texture size
+
 }
 
 
@@ -38,6 +41,7 @@ void Button::handleEvent(const sf::Event& event, const sf::RenderWindow& window)
 
 void Button::draw(sf::RenderWindow& window) {
     window.draw(sprite);
+    window.draw(text);
 }
 
 
