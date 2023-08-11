@@ -24,6 +24,7 @@ void Menu::load(const std::pair<int, int>& res)
             {"Slide Right", [this](){ this->slideRight(); }},
             {"Exit", [](){ std::cout << "Exiting..." << std::endl; /* Add exit logic here */ }},
             {"Analyse", [](){ std::cout << "Analysing..." << std::endl; /* Add analyse logic here */ }},
+            {"Play", [](){std::cout<< "Playing..." << std::endl;}}
             // Add more configurations as needed
     };
     // Load the background image
@@ -56,9 +57,7 @@ void Menu::load(const std::pair<int, int>& res)
             buttons[buttonName].setText(std::to_string(i), font, 30);
         }
     }
-
     this->_res = res;
-
 }
 
 void Menu::loadBeatmaps(Database& database) {
@@ -86,7 +85,7 @@ void Menu::loadBeatmaps(Database& database) {
         }
 
         // Create a BeatmapPanel object and add it to the beatmapPanel vector
-        BeatmapPanel panel(panelTexture, coverTexture, sf::Vector2f(5, 5), _res , "S", fonts["sansation"]);
+        BeatmapPanel panel(panelTexture, coverTexture, sf::Vector2f(5, 5), _res, beatmap, fonts["sansation"]);
         beatmapPanel.push_back(panel);
     }
 }
@@ -121,7 +120,7 @@ void Menu::draw(sf::RenderWindow& window)
     }
 
     // Draw the panels in reverse order
-    std::cout << beatmapPanel.size() << std::endl;
+    //std::cout << beatmapPanel.size() << std::endl;
     for (int i = beatmapPanel.size() - 1; i >= 0; --i) {
         beatmapPanel[i].draw(window);
     }

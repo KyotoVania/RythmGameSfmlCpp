@@ -8,11 +8,11 @@
 #include <iostream>
 #include <utility>
 #include "Beatmap/Beatmap.hpp"
-
+#include "Database/Database.hpp"
 class BeatmapPanel {
 public:
     BeatmapPanel();
-    BeatmapPanel(const sf::Texture& texturePannel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, std::string Grade, sf::Font fonts);
+    BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, sf::Font fonts);
     ~BeatmapPanel();
     void draw(sf::RenderWindow& window);
     void setText(const std::string& text, const sf::Font& font, unsigned int characterSize);
@@ -26,6 +26,9 @@ private:
     sf::Texture textureCover;
     sf::Sprite coverSprite;
     sf::Text gradeText;
+    sf::Text titleText;
+    sf::Text artistText;
+    sf::Text difficultyText;
     sf::Vector2f position;
     sf::Vector2f size;
     int textSize;

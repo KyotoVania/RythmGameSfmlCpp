@@ -13,8 +13,7 @@ BeatmapPanel::BeatmapPanel(){
 
 }
 
-BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, std::string Grade, sf::Font fonts)
-{
+BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, sf::Font fonts) {
     // Normalize the position
     float normalizedX = std::fmod(position.x, 10.0f) / 10.0f;
     float normalizedY = std::fmod(position.y, 10.0f) / 10.0f;
@@ -32,16 +31,35 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
     coverSprite.setTexture(textureCover);
     coverSprite.setPosition(position); // Adjust this as needed
     _font = sf::Font(fonts);
-    gradeText.setFont(_font);
     std::cout << "Creating grade text" << std::endl;
     // Assuming grade is a text displayed on the panel
     //load font "Resources/Fonts/sansation.ttf"
-    textSize = 250;
-    gradeText.setCharacterSize(textSize); // Adjust this as needed
-    gradeText.setString("S");
-    gradeText.setPosition(0, 0); // Adjust this as needed
-        // Don't forget to set the font and character size for the text
-    std::cout << "Creating grade text" << std::endl;
+    textSize = 35;
+    // Calculate the starting position for the text based on the cover's right edge
+    float textStartX = coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + 10; // 10 is a margin, adjust as needed
+    float textStartY = coverSprite.getPosition().y;
+
+    // Set up the text elements
+    titleText.setFont(_font);
+    titleText.setCharacterSize(20); // Adjust as needed
+    titleText.setString("Title : " + beatmapConfig.getName());
+    titleText.setPosition(textStartX, textStartY);
+
+    artistText.setFont(_font);
+    artistText.setCharacterSize(20); // Adjust as needed
+    artistText.setString("Artist : " + beatmapConfig.getArtist());
+    artistText.setPosition(textStartX, textStartY + titleText.getGlobalBounds().height + 5); // 5 is spacing between texts
+
+    difficultyText.setFont(_font);
+    difficultyText.setCharacterSize(20); // Adjust as needed
+    difficultyText.setString("Difficulty : " + std::to_string(beatmapConfig.getDifficulty()));
+    difficultyText.setPosition(textStartX, artistText.getPosition().y + artistText.getGlobalBounds().height + 5);
+
+    gradeText.setFont(_font);
+    gradeText.setCharacterSize(20); // Adjust as needed
+    gradeText.setString("Grade : S");
+    gradeText.setPosition(textStartX, difficultyText.getPosition().y + difficultyText.getGlobalBounds().height + 5);
+
 }
 
 BeatmapPanel::~BeatmapPanel(){
@@ -52,6 +70,12 @@ void BeatmapPanel::draw(sf::RenderWindow& window) {
     window.draw(sprite);
     window.draw(coverSprite);
     gradeText.setFont(_font);
+    titleText.setFont(_font);
+    artistText.setFont(_font);
+    difficultyText.setFont(_font);
+    window.draw(titleText);
+    window.draw(artistText);
+    window.draw(difficultyText);
     window.draw(gradeText);
     //       std::cout << "Drawing panel" << std::endl;
 }
@@ -80,7 +104,7 @@ void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset
     float screenOffsetY = std::fmod(offset.y, 10.0f) / 10.0f * res.second;
     float PercentX = res.first / 100.0f;
     float PercentY = res.second / 100.0f;
-    std::cout << "PercentX : " << PercentX << " PercentY : " << PercentY << std::endl;
+    //std::cout << "PercentX : " << PercentX << " PercentY : " << PercentY << std::endl;
     // Adjust the panel
     sprite.setScale(scale, scale);
     sprite.setColor(sf::Color(255, 255, 255, opacity));
@@ -92,5 +116,13 @@ void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset
     coverSprite.setColor(sf::Color(255, 255, 255, opacity));
     coverSprite.setPosition(screenOffsetX + PercentX * 5, screenOffsetY + PercentY * 5); // Also set the position to the screen offset
     gradeText.setCharacterSize(textSize * scale);
-    gradeText.setPosition(screenOffsetX + PercentX * 15, screenOffsetY + PercentY * 10); // Also set the position to the screen offset
+    titleText.setCharacterSize(textSize * scale);
+    artistText.setCharacterSize(textSize * scale);
+    difficultyText.setCharacterSize(textSize * scale);
+    titleText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, coverSprite.getPosition().y);
+    artistText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, titleText.getPosition().y + PercentY * 3);
+    difficultyText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, artistText.getPosition().y + PercentY * 3);
+    gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, difficultyText.getPosition().y + PercentY * 3);
+    //difficultyText.setPosition(artistText.getPosition().x, artistText.getPosition().y + artistText.getGlobalBounds().height + 5);
+    //gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + 10, coverSprite.getPosition().y + coverSprite.getGlobalBounds().height - gradeText.getGlobalBounds().height);
 }
