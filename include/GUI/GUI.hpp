@@ -18,15 +18,13 @@
 #include "Database/Database.hpp"
 #include "Menu/Menu.hpp"
 
-enum gameState {
-    MAIN_MENU,
-    SETTINGS,
+enum GameState {
+    MENU,
     GAME,
-    PAUSE,
-    GAME_OVER,
-    CREDITS,
+    WELCOMEMENU,
     EXIT
 };
+
 class GUI {
 	public:
 		GUI();
@@ -37,13 +35,16 @@ class GUI {
         void updateLoadingScreen(int pourcent);
         void createMenu();
         void updateMenu();
-        void loop();
+        void loop(int state);
+        void drawState(int state);
+        void updateState(int state, sf::Event event);
+        void createGame();
+        void updateGame();
 protected:
         sf::RenderWindow window;
         sf::Event event;
         sf::Vector2i mousePos;
         sf::Vector2f mousePosF;
-        int gameState = MAIN_MENU;
         Menu menu;
         LoadingScreen loadingScreen;
 

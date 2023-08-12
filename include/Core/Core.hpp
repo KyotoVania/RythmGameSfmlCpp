@@ -12,18 +12,28 @@
 #include "GUI/GUI.hpp"
 #include "Config/Config.hpp"
 #include "Database/Database.hpp"
+#include <iostream>
+#include <future>
+#include <thread>
+
+using namespace std;
+
+
 
 class Core {
-	public:
-		Core();
-		~Core();
-	protected:
-	private:
-        Menu menu;
-        GUI gui;
-        //Config config;
-        Database database;
+public:
+    Core();
+    ~Core();
+    void run();
 
+private:
+    void loadConfigAndDatabase();
+    void applyConfig();
+    Config config;
+    GUI gui;
+    Database database;
+    std::tuple<bool, GameState, GameState> gameStates;
 };
+
 
 #endif /*CORE_HPP_*/

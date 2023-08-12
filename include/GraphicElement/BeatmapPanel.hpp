@@ -12,7 +12,7 @@
 class BeatmapPanel {
 public:
     BeatmapPanel();
-    BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, sf::Font fonts);
+    BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts);
     ~BeatmapPanel();
     void draw(sf::RenderWindow& window);
     void setText(const std::string& text, const sf::Font& font, unsigned int characterSize);

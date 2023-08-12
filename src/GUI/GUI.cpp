@@ -72,20 +72,37 @@ void GUI::updateMenu()
     menu.draw(window);
     window.display();
 }
+void GUI::updateState(int state, sf::Event event)
+{
+    if (state == MENU){
+        menu.update(event, window);
+    } else if (state == GAME){
+        //game.update(event, window);
+    }
+}
 
-void GUI::loop()
+void GUI::drawState(int state)
+{
+    if (state == MENU){
+        menu.draw(window);
+    } else if (state == GAME){
+        //game.draw(window);
+    }
+}
+
+void GUI::loop(int state)
 {
     //for the moment only call the menu update
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed || state == EXIT)
                 window.close();
             else
-                menu.update(event, window);
+                updateState(state, event);
         }
         window.clear();
-        menu.draw(window);
+        drawState(state);
         window.display();
     }
 }

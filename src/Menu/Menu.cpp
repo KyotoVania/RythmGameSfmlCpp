@@ -36,8 +36,8 @@ void Menu::load(const std::pair<int, int>& res)
     sprites["background"] = background;
 
     // Load the font
-    sf::Font& font = fonts["sansation"];
-    if (!font.loadFromFile("Resources/Fonts/sansation.ttf")) {
+    if (!fonts["sansation"].loadFromFile("Resources/Fonts/sansation.ttf")) {
+        std::cout << "Error loading font" << std::endl;
         // Handle error...
     }
 
@@ -51,10 +51,10 @@ void Menu::load(const std::pair<int, int>& res)
         std::string buttonName = "button" + std::to_string(i);
         if (i - 1 < buttonConfigs.size()) { // Ensure we don't go out of bounds
             buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), buttonConfigs[i-1].onClick, res));
-            buttons[buttonName].setText(buttonConfigs[i-1].text, font, 30);
+            buttons[buttonName].setText(buttonConfigs[i-1].text, fonts["sansation"], 30);
         } else {
             buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), [](){}, res)); // Default empty function
-            buttons[buttonName].setText(std::to_string(i), font, 30);
+            buttons[buttonName].setText(std::to_string(i), fonts["sansation"], 30);
         }
     }
     this->_res = res;

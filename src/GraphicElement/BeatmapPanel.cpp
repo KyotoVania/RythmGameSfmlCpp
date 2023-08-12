@@ -13,7 +13,7 @@ BeatmapPanel::BeatmapPanel(){
 
 }
 
-BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, sf::Font fonts) {
+BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts) {
     // Normalize the position
     float normalizedX = std::fmod(position.x, 10.0f) / 10.0f;
     float normalizedY = std::fmod(position.y, 10.0f) / 10.0f;
@@ -30,7 +30,6 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
     // Assuming the cover is a smaller sprite displayed on the panel
     coverSprite.setTexture(textureCover);
     coverSprite.setPosition(position); // Adjust this as needed
-    _font = sf::Font(fonts);
     std::cout << "Creating grade text" << std::endl;
     // Assuming grade is a text displayed on the panel
     //load font "Resources/Fonts/sansation.ttf"
@@ -40,22 +39,22 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
     float textStartY = coverSprite.getPosition().y;
 
     // Set up the text elements
-    titleText.setFont(_font);
+    titleText.setFont(fonts);
     titleText.setCharacterSize(20); // Adjust as needed
     titleText.setString("Title : " + beatmapConfig.getName());
     titleText.setPosition(textStartX, textStartY);
 
-    artistText.setFont(_font);
+    artistText.setFont(fonts);
     artistText.setCharacterSize(20); // Adjust as needed
     artistText.setString("Artist : " + beatmapConfig.getArtist());
     artistText.setPosition(textStartX, textStartY + titleText.getGlobalBounds().height + 5); // 5 is spacing between texts
 
-    difficultyText.setFont(_font);
+    difficultyText.setFont(fonts);
     difficultyText.setCharacterSize(20); // Adjust as needed
     difficultyText.setString("Difficulty : " + std::to_string(beatmapConfig.getDifficulty()));
     difficultyText.setPosition(textStartX, artistText.getPosition().y + artistText.getGlobalBounds().height + 5);
 
-    gradeText.setFont(_font);
+    gradeText.setFont(fonts);
     gradeText.setCharacterSize(20); // Adjust as needed
     gradeText.setString("Grade : S");
     gradeText.setPosition(textStartX, difficultyText.getPosition().y + difficultyText.getGlobalBounds().height + 5);
@@ -69,10 +68,12 @@ BeatmapPanel::~BeatmapPanel(){
 void BeatmapPanel::draw(sf::RenderWindow& window) {
     window.draw(sprite);
     window.draw(coverSprite);
+    /*
     gradeText.setFont(_font);
     titleText.setFont(_font);
     artistText.setFont(_font);
     difficultyText.setFont(_font);
+     */
     window.draw(titleText);
     window.draw(artistText);
     window.draw(difficultyText);
