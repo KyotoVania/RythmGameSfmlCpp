@@ -54,10 +54,7 @@ void Core::applyConfig() {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             gui.updateLoadingScreen(i);
             if (i == 10) {
-                gui.createMenu();
-            }
-            if (i == 20) {
-                gui.loadBeatmapPanel(database);
+                gui.createMenu(database);
             }
         }
     });

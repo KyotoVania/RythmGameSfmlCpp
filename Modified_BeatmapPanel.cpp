@@ -13,7 +13,7 @@ BeatmapPanel::BeatmapPanel(){
 
 }
 
-BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureArrowLeft, const sf::Texture& textureArrowRight, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts) {
+BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts) {
     // Normalize the position
     float normalizedX = std::fmod(position.x, 10.0f) / 10.0f;
     float normalizedY = std::fmod(position.y, 10.0f) / 10.0f;
@@ -24,14 +24,24 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
 
     sprite.setTexture(texturePanel);
     sprite.setPosition(screenX, screenY);
+    // Initialize left arrow button
+    sf::Texture leftArrowTexture;
+    leftArrowTexture.loadFromFile("Resources/UI/ArrowsLeft.png");
+    leftArrowButton.setTexture(leftArrowTexture);
+    leftArrowButton.setPosition(screenX, screenY + sprite.getGlobalBounds().height - leftArrowTexture.getSize().y - 10);  // Place it at the bottom left of the panel with a small margin
+
+    // Initialize right arrow button
+    sf::Texture rightArrowTexture;
+    rightArrowTexture.loadFromFile("Resources/UI/ArrowsRight.png");
+    rightArrowButton.setTexture(rightArrowTexture);
+    rightArrowButton.setPosition(screenX + sprite.getGlobalBounds().width - rightArrowTexture.getSize().x, screenY + sprite.getGlobalBounds().height - rightArrowTexture.getSize().y - 10);  // Place it at the bottom right of the panel with a small margin
+
+    currentDifficulty = 0;  // Initial difficulty level
 
     std::cout << "Creating panel position : " << screenX << " " << screenY << std::endl;
     std::cout << "position are set to : " << position.x << " " << position.y << std::endl;
     this->position = sf::Vector2f(screenX, screenY);
     // Assuming the cover is a smaller sprite displayed on the panel
-    //check if the cover is not empty
-    if (textureCover.getSize().x == 0 || textureCover.getSize().y == 0)
-        std::cout << "Cover is empty" << std::endl;
     coverSprite.setTexture(textureCover);
     coverSprite.setPosition(position); // Adjust this as needed
     std::cout << "Creating grade text" << std::endl;
@@ -81,8 +91,12 @@ void BeatmapPanel::draw(sf::RenderWindow& window) {
     window.draw(titleText);
     window.draw(artistText);
     window.draw(difficultyText);
+    // Draw difficulty buttons
+    window.draw(leftArrowButton.getSprite());
+    window.draw(rightArrowButton.getSprite());
+
     window.draw(gradeText);
-   //      std::cout << "Drawing panel" << std::endl;
+    //       std::cout << "Drawing panel" << std::endl;
 }
 
 void BeatmapPanel::setText(const std::string& text, const sf::Font& font, unsigned int characterSize) {
@@ -130,4 +144,18 @@ void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset
     gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, difficultyText.getPosition().y + PercentY * 3);
     //difficultyText.setPosition(artistText.getPosition().x, artistText.getPosition().y + artistText.getGlobalBounds().height + 5);
     //gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + 10, coverSprite.getPosition().y + coverSprite.getGlobalBounds().height - gradeText.getGlobalBounds().height);
+}
+
+void BeatmapPanel::handleButtonClick(const sf::Vector2f& mousePosition) {
+    if (leftArrowButton.isClicked(mousePosition)) {
+        if (currentDifficulty > 0) {
+            currentDifficulty--;
+            // Update the difficultyText or any other required elements
+        }
+    } else if (rightArrowButton.isClicked(mousePosition)) {
+        if (currentDifficulty < MAX_DIFFICULTY) {  // Assuming MAX_DIFFICULTY is a defined constant or you can replace with the desired value
+            currentDifficulty++;
+            // Update the difficultyText or any other required elements
+        }
+    }
 }

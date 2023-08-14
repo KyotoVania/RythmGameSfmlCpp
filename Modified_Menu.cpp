@@ -13,7 +13,7 @@ BeatmapPanel::BeatmapPanel(){
 
 }
 
-BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureArrowLeft, const sf::Texture& textureArrowRight, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts) {
+BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts) {
     // Normalize the position
     float normalizedX = std::fmod(position.x, 10.0f) / 10.0f;
     float normalizedY = std::fmod(position.y, 10.0f) / 10.0f;
@@ -24,14 +24,10 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
 
     sprite.setTexture(texturePanel);
     sprite.setPosition(screenX, screenY);
-
     std::cout << "Creating panel position : " << screenX << " " << screenY << std::endl;
     std::cout << "position are set to : " << position.x << " " << position.y << std::endl;
     this->position = sf::Vector2f(screenX, screenY);
     // Assuming the cover is a smaller sprite displayed on the panel
-    //check if the cover is not empty
-    if (textureCover.getSize().x == 0 || textureCover.getSize().y == 0)
-        std::cout << "Cover is empty" << std::endl;
     coverSprite.setTexture(textureCover);
     coverSprite.setPosition(position); // Adjust this as needed
     std::cout << "Creating grade text" << std::endl;
@@ -82,7 +78,7 @@ void BeatmapPanel::draw(sf::RenderWindow& window) {
     window.draw(artistText);
     window.draw(difficultyText);
     window.draw(gradeText);
-   //      std::cout << "Drawing panel" << std::endl;
+    //       std::cout << "Drawing panel" << std::endl;
 }
 
 void BeatmapPanel::setText(const std::string& text, const sf::Font& font, unsigned int characterSize) {
@@ -130,4 +126,22 @@ void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset
     gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, difficultyText.getPosition().y + PercentY * 3);
     //difficultyText.setPosition(artistText.getPosition().x, artistText.getPosition().y + artistText.getGlobalBounds().height + 5);
     //gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + 10, coverSprite.getPosition().y + coverSprite.getGlobalBounds().height - gradeText.getGlobalBounds().height);
+}
+
+void Menu::loadTextures() {
+    // Load the background texture
+    textures["background"].loadFromFile("Resources/UI/Background.jpg");
+
+    // Load button textures
+    for (int i = 1; i <= 6; ++i) {
+        std::string texturePath = "Resources/UI/Btn0" + std::to_string(i) + ".png";
+        textures["button" + std::to_string(i)].loadFromFile(texturePath);
+    }
+
+    // Load the panel texture
+    textures["panel"].loadFromFile("Resources/UI/MainPanel01.png");
+
+    // Load arrow textures
+    textures["arrow_left"].loadFromFile("Resources/UI/ArrowsLeft.png");
+    textures["arrow_right"].loadFromFile("Resources/UI/ArrowsRight.png");
 }

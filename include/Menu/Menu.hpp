@@ -29,7 +29,8 @@ class Menu {
 public:
     Menu();
     ~Menu();
-    void load(const std::pair<int, int>& res);
+    void load(const std::pair<int, int>& res, Database& database);
+    void loadTextures(Database& database);
     void update(const sf::Event& event, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     void loadBeatmaps(Database& database);

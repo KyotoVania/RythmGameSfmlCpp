@@ -12,8 +12,7 @@
 class BeatmapPanel {
 public:
     BeatmapPanel();
-    BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureArrowLeft, const sf::Texture& textureArrowRight,
-                 const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts);
+    BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& textureCover, const sf::Vector2f& position, std::pair<int, int> res, const BeatmapConfig& beatmapConfig, const sf::Font& fonts);
     ~BeatmapPanel();
     void draw(sf::RenderWindow& window);
     void setText(const std::string& text, const sf::Font& font, unsigned int characterSize);
@@ -34,5 +33,11 @@ private:
     sf::Vector2f size;
     int textSize;
     sf::Font _font;
+    Button leftArrowButton;
+    Button rightArrowButton;
+    int currentDifficulty;  // Represents the current difficulty level
+    void handleButtonClick(const sf::Vector2f& mousePosition);
 };
+
+#endif /*BEATMAPPANNEL_HPP_*/
 #endif /*BEATMAPPANNEL_HPP_*/

@@ -33,7 +33,7 @@ class GUI {
         void loadBeatmapPanel(Database& database);
         void loadingScreenCreate();
         void updateLoadingScreen(int pourcent);
-        void createMenu();
+        void createMenu(Database& database);
         void updateMenu();
         void loop(int state);
         void drawState(int state);

@@ -16,8 +16,56 @@ Menu::~Menu()
 {
 }
 
+void Menu::loadTextures(Database& database)
+{
+    // Load the background texture
+    if (!textures["background"].loadFromFile("Resources/UI/Background.jpg")) {
+        std::cout << "Error loading texture : " << "Resources/UI/Background.jpg" << std::endl;
+        // Handle error...
+    }
+    // Load button textures
+    for (int i = 1; i <= 6; ++i) {
+        std::string texturePath = "Resources/UI/Btn0" + std::to_string(i) + ".png";
+        if (!textures["Btn0" + std::to_string(i)].loadFromFile(texturePath)) {
+            std::cout << "Error loading texture " << texturePath << std::endl;
+            // Handle error...
+        }
+    }
+
+    // Load the panel texture
+    if (!textures["MainPanel01"].loadFromFile("Resources/UI/MainPanel01.png")) {
+        std::cout << "Error loading texture : " << "Resources/UI/MainPanel01.png" << std::endl;
+        // Handle error...
+    }
+    // Load arrow textures
+
+    if (!textures["ArrowsRight"].loadFromFile("Resources/UI/ArrowsRight.png")) {
+        std::cout << "Error loading texture : " << "Resources/UI/ArrowsRight.png" << std::endl;
+        // Handle error...
+    }
+    std::cout << "Loading arrow textures" << std::endl;
+    if (!textures["ArrowsLeft"].loadFromFile("Resources/UI/ArrowsLeft.png")) {
+        std::cout << "Error loading texture : " << "Resources/UI/ArrowsLeft.png" << std::endl;
+        // Handle error...
+    }
+    // Load the cover texture
+    for (int i = 0; i < database.getNbBeatmaps(); ++i) {
+        BeatmapConfig beatmap = database.getBeatmap(i);
+        if (beatmap.getFolderPath() == "") {
+            continue;
+        }
+        std::string coverPath = "Resources/Beatmaps/" + beatmap.getFolderPath() + "/Cover.png";
+        if (!textures[beatmap.getFolderPath()].loadFromFile(coverPath)) {
+            std::cout << "Error loading texture : " << coverPath << std::endl;
+            // Handle error...
+        }
+    }
+}
+
+
+
 // Menu.cpp
-void Menu::load(const std::pair<int, int>& res)
+void Menu::load(const std::pair<int, int>& res, Database& database)
 {
     buttonConfigs = {
             {"Slide Left", [this](){ this->slideLeft(); }},
@@ -28,11 +76,8 @@ void Menu::load(const std::pair<int, int>& res)
             // Add more configurations as needed
     };
     // Load the background image
-    sf::Texture& backgroundTexture = textures["background"];
-    if (!backgroundTexture.loadFromFile("Resources/UI/Background.jpg")) {
-        // Handle error...
-    }
-    sf::Sprite background(backgroundTexture);
+    loadTextures(database);
+    sf::Sprite background(textures["background"]);
     sprites["background"] = background;
 
     // Load the font
@@ -43,49 +88,33 @@ void Menu::load(const std::pair<int, int>& res)
 
     // Load the bottom buttons
     for (int i = 1; i <= 6; ++i) {
-        std::string texturePath = "Resources/UI/Btn0" + std::to_string(i) + ".png";
-        sf::Texture& buttonTexture = textures["button" + std::to_string(i)];
-        if (!buttonTexture.loadFromFile(texturePath)) {
-            // Handle error...
-        }
         std::string buttonName = "button" + std::to_string(i);
+
         if (i - 1 < buttonConfigs.size()) { // Ensure we don't go out of bounds
-            buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), buttonConfigs[i-1].onClick, res));
+            buttons.emplace(buttonName, Button(textures["Btn0" + std::to_string(i)]
+                    ,sf::Vector2f(10 + i * 10, 80), buttonConfigs[i-1].onClick, res));
             buttons[buttonName].setText(buttonConfigs[i-1].text, fonts["sansation"], 30);
         } else {
-            buttons.emplace(buttonName, Button(buttonTexture, sf::Vector2f(10 + i * 10, 80), [](){}, res)); // Default empty function
+            buttons.emplace(buttonName, Button(textures["Btn0" + std::to_string(i)], sf::Vector2f(10 + i * 10, 80), [](){}, res)); // Default empty function
             buttons[buttonName].setText(std::to_string(i), fonts["sansation"], 30);
         }
     }
     this->_res = res;
+    loadBeatmaps(database);
 }
 
 void Menu::loadBeatmaps(Database& database) {
     for (int i = 0; i < database.getNbBeatmaps(); ++i) {
+        std::cout << "Loading beatmap " << i << std::endl;
         BeatmapConfig beatmap = database.getBeatmap(i);
         if (beatmap.getFolderPath() == "") {
             continue;
         }
-
-        // Load the cover texture
-        std::string coverTexturePath = "Resources/Beatmaps/"
-                                       + beatmap.getFolderPath() + "/Cover.png"; // Assuming the cover image is named "cover.png"
-        sf::Texture& coverTexture = textures[coverTexturePath];
-        if (!coverTexture.loadFromFile(coverTexturePath)) {
-            cout << "Error loading texture " << coverTexturePath << endl;
-            // Handle error...
-        }
-
-        // Load the panel texture
-        std::string panelTexturePath = "Resources/UI/MainPanel01.png"; // Assuming the panel image is named "MainPanel01.png"
-        sf::Texture& panelTexture = textures[panelTexturePath];
-        if (!panelTexture.loadFromFile(panelTexturePath)) {
-            cout << "Error loading texture " << panelTexturePath << endl;
-            // Handle error...
-        }
-
+        
         // Create a BeatmapPanel object and add it to the beatmapPanel vector
-        BeatmapPanel panel(panelTexture, coverTexture, sf::Vector2f(5, 5), _res, beatmap, fonts["sansation"]);
+        BeatmapPanel panel(textures["MainPanel01"], textures["ArrowsLeft"], textures["ArrowsRight"],
+                           textures[beatmap.getFolderPath()],
+                           sf::Vector2f(5, 5), _res, beatmap, fonts["sansation"]);
         beatmapPanel.push_back(panel);
     }
 }
@@ -120,7 +149,7 @@ void Menu::draw(sf::RenderWindow& window)
     }
 
     // Draw the panels in reverse order
-    //std::cout << beatmapPanel.size() << std::endl;
+   // std::cout << "there is x beatpmap : " + beatmapPanel.size() << std::endl;
     for (int i = beatmapPanel.size() - 1; i >= 0; --i) {
         beatmapPanel[i].draw(window);
     }
