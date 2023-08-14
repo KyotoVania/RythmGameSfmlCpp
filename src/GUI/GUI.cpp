@@ -47,6 +47,7 @@ void GUI::updateLoadingScreen(int percent) {
 void GUI::loadBeatmapPanel(Database& database)
 {
     //this function will create the beatmap panel
+    std::cout << "Loading beatmapsPanel..." << std::endl;
     menu.loadBeatmaps(database);
 }
 

@@ -22,9 +22,6 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
     float screenX = normalizedX * res.first - texturePanel.getSize().x / 2;
     float screenY = normalizedY * res.second - texturePanel.getSize().y / 2;
 
-    sprites["panel"].setTexture(texturePanel);
-    sprites["panel"].setPosition(screenX, screenY);
-
 
     std::cout << "Creating panel position : " << screenX << " " << screenY << std::endl;
     std::cout << "position are set to : " << position.x << " " << position.y << std::endl;
@@ -34,22 +31,14 @@ BeatmapPanel::BeatmapPanel(const sf::Texture& texturePanel, const sf::Texture& t
     if (textureCover.getSize().x == 0 || textureCover.getSize().y == 0)
         std::cout << "Cover is empty" << std::endl;
     sprites["cover"].setTexture(textureCover);
-    sprites["cover"].setPosition(position); // Adjust this as needed
-
-    sprites["arrowLeft"].setTexture(textureArrowLeft);
-    float arrowLeftX = 960;
-    float arrowLeftY = 540;
-    sprites["arrowLeft"].setPosition(arrowLeftX, arrowLeftY);
-    sprites["arrowRight"].setTexture(textureArrowRight);
-    float arrowRightX = arrowLeftX + sprites["arrowLeft"].getGlobalBounds().width + 10;
-    float arrowRightY = arrowLeftY;
-    sprites["arrowRight"].setPosition(arrowRightX, arrowRightY);    std::cout << "Creating grade text" << std::endl;
+    coverSprite.setPosition(position); // Adjust this as needed
+    std::cout << "Creating grade text" << std::endl;
     // Assuming grade is a text displayed on the panel
     //load font "Resources/Fonts/sansation.ttf"
     textSize = 35;
     // Calculate the starting position for the text based on the cover's right edge
-    float textStartX = sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + 10; // 10 is a margin, adjust as needed
-    float textStartY = sprites["cover"].getPosition().y;
+    float textStartX = coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + 10; // 10 is a margin, adjust as needed
+    float textStartY = coverSprite.getPosition().y;
 
     // Set up the text elements
     texts["title"].setFont(fonts);
@@ -79,21 +68,23 @@ BeatmapPanel::~BeatmapPanel(){
 }
 
 void BeatmapPanel::draw(sf::RenderWindow& window) {
-    window.draw(sprites["panel"]);
-    window.draw(sprites["cover"]);
-    window.draw(sprites["arrowLeft"]);
-    window.draw(sprites["arrowRight"]);
-    window.draw(texts["title"]);
-
-    window.draw(texts["artist"]);
-    window.draw(texts["difficulty"]);
-    window.draw(texts["grade"]);
-
-     //    std::cout << "Drawing panel" << std::endl;
+    window.draw(sprite);
+    window.draw(coverSprite);
+    window.draw(titleText);
+    window.draw(artistText);
+    window.draw(difficultyText);
+    window.draw(gradeText);
+   //      std::cout << "Drawing panel" << std::endl;
 }
 
 void BeatmapPanel::setText(const std::string& text, const sf::Font& font, unsigned int characterSize) {
-
+    gradeText.setString(text);
+    gradeText.setFont(font);
+    gradeText.setCharacterSize(characterSize);
+    // Center the text in the button
+    sf::FloatRect textRect = gradeText.getLocalBounds();
+    gradeText.setOrigin(textRect.left + textRect.width/2.0f, textRect.top  + textRect.height/2.0f);
+    gradeText.setPosition(sf::Vector2f(position.x + size.x/2.0f, position.y + size.y/2.0f));
 }
 
 void BeatmapPanel::adjustPanel(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res) {
@@ -110,40 +101,43 @@ void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset
     float screenOffsetY = std::fmod(offset.y, 10.0f) / 10.0f * res.second;
     float PercentX = res.first / 100.0f;
     float PercentY = res.second / 100.0f;
+    //std::cout << "PercentX : " << PercentX << " PercentY : " << PercentY << std::endl;
     // Adjust the panel
-    sprites["panel"].setScale(scale, scale);
-    sprites["panel"].setColor(sf::Color(255, 255, 255, opacity));
-    screenOffsetX = screenOffsetX - (sprites["panel"].getTexture()->getSize().x * scale) / 2;
-    screenOffsetY = screenOffsetY - (sprites["panel"].getTexture()->getSize().y * scale) / 2;
-    sprites["panel"].setPosition(screenOffsetX, screenOffsetY); // Also set the position to the screen offset
+    sprite.setScale(scale, scale);
+    sprite.setColor(sf::Color(255, 255, 255, opacity));
+    screenOffsetX = screenOffsetX - (sprite.getTexture()->getSize().x * scale) / 2;
+    screenOffsetY = screenOffsetY - (sprite.getTexture()->getSize().y * scale) / 2;
+    sprite.setPosition(screenOffsetX, screenOffsetY); // Also set the position to the screen offset
     // Adjust the cover and text as well
-    sprites["cover"].setScale(scale, scale);
-    sprites["cover"].setColor(sf::Color(255, 255, 255, opacity));
-    sprites["cover"].setPosition(screenOffsetX + PercentX * 5, screenOffsetY + PercentY * 5); // Also set the position to the screen offset
-
-
-    for (auto& text : texts) {
-        text.second.setCharacterSize(textSize * scale);
-        //text.second.setColor(sf::Color(255, 255, 255, opacity));
-    }
-    std::cout << "sprite[cover] position : " << sprites["cover"].getPosition().x << " " << sprites["cover"].getPosition().y << std::endl;
-    texts["title"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, sprites["cover"].getPosition().y);
-    texts["artist"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, texts["title"].getPosition().y + PercentY * 3);
-    texts["difficulty"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, texts["artist"].getPosition().y + PercentY * 3);
-    texts["grade"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, texts["difficulty"].getPosition().y + PercentY * 3);
+    coverSprite.setScale(scale, scale);
+    coverSprite.setColor(sf::Color(255, 255, 255, opacity));
+    coverSprite.setPosition(screenOffsetX + PercentX * 5, screenOffsetY + PercentY * 5); // Also set the position to the screen offset
+    gradeText.setCharacterSize(textSize * scale);
+    titleText.setCharacterSize(textSize * scale);
+    artistText.setCharacterSize(textSize * scale);
+    difficultyText.setCharacterSize(textSize * scale);
+    titleText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, coverSprite.getPosition().y);
+    artistText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, titleText.getPosition().y + PercentY * 3);
+    difficultyText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, artistText.getPosition().y + PercentY * 3);
+    gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + PercentX, difficultyText.getPosition().y + PercentY * 3);
+    //difficultyText.setPosition(artistText.getPosition().x, artistText.getPosition().y + artistText.getGlobalBounds().height + 5);
+    //gradeText.setPosition(coverSprite.getPosition().x + coverSprite.getGlobalBounds().width + 10, coverSprite.getPosition().y + coverSprite.getGlobalBounds().height - gradeText.getGlobalBounds().height);
 }
-/*
-void BeatmapPanel::handleButtonClick(const sf::Vector2f& mousePosition) {
-    if (leftArrowButton.isClicked(mousePosition)) {
-        if (currentDifficulty > 0) {
-            currentDifficulty--;
-            // Update the difficultyText or any other required elements
-        }
-    } else if (rightArrowButton.isClicked(mousePosition)) {
-        if (currentDifficulty < MAX_DIFFICULTY) {  // Assuming MAX_DIFFICULTY is a defined constant or you can replace with the desired value
-            currentDifficulty++;
-            // Update the difficultyText or any other required elements
-        }
+
+void BeatmapPanel::draw(sf::RenderWindow& window) {
+    // Draw sprites
+    for (auto& [key, sprite] : sprites) {
+        window.draw(sprite);
+    }
+
+    // Draw texts
+    for (auto& [key, text] : texts) {
+        window.draw(text);
     }
 }
- */
+
+void BeatmapPanel::setText(const std::string& text, const sf::Font& font, unsigned int characterSize) {
+    texts["title"].setString(text);
+    texts["title"].setFont(font);
+    texts["title"].setCharacterSize(characterSize);
+}

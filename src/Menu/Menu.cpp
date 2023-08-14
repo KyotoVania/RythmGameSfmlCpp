@@ -104,6 +104,7 @@ void Menu::load(const std::pair<int, int>& res, Database& database)
 }
 
 void Menu::loadBeatmaps(Database& database) {
+    //std::cout << "Loading beatmaps in MENU" << std::endl;
     for (int i = 0; i < database.getNbBeatmaps(); ++i) {
         std::cout << "Loading beatmap " << i << std::endl;
         BeatmapConfig beatmap = database.getBeatmap(i);

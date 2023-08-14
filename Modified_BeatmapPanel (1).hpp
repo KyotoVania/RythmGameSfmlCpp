@@ -25,7 +25,11 @@ private:
     sf::Texture texture;
     std::map<std::string, sf::Sprite> sprites; // Replace individual sprites with a map
     sf::Texture textureCover;
+    sf::Sprite coverSprite;
     std::map<std::string, sf::Text> texts; // Map for text elements
+    sf::Text titleText;
+    sf::Text artistText;
+    sf::Text difficultyText;
     sf::Vector2f position;
     sf::Vector2f size;
     int textSize;
