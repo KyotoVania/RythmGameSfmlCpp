@@ -22,14 +22,17 @@ using namespace std;
 #include "GraphicElement/Button.hpp"
 #include "Database/Database.hpp"
 #include "GraphicElement/BeatmapPanel.hpp"
+#include "Visualizer/FFT.hpp"
 //#include "GraphicElement/TriangleButton.hpp"
 //TODO: BANNER
+
+class Core;
 
 class Menu {
 public:
     Menu();
     ~Menu();
-    void load(const std::pair<int, int>& res, Database& database);
+    void load(const std::pair<int, int>& res, Database& database,  std::vector<ButtonConfig>& buttonConfigs);
     void loadTextures(Database& database);
     void update(const sf::Event& event, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
@@ -52,6 +55,7 @@ protected:
     pair<int, int> _res = {0, 0};
     int theme = 0;
     std::vector<ButtonConfig> buttonConfigs;
+    void onAnalyzeButtonClicked(Core& core, const std::string& beatmapPath);
 
 private:
 };

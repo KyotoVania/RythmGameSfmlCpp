@@ -3,7 +3,7 @@
 	#include <memory>
 	#include <SFML/Window.hpp>
 	#include <SFML/Graphics.hpp>
-	#include "FFT.hpp"
+	#include "Visualizer/FFT.hpp"
 struct Star
 {
 	/**
@@ -28,37 +28,26 @@ struct Star
 	float old_y = 0.f;
 };
 
-class Projectile
-{
-public:
-    Projectile(const float x, const float y, const float radius, const float speed, float angle, bool yingOrYang);
-    ~Projectile();
-	sf::CircleShape circle;
-    float speed;
-	bool yingYang;
-	float radius;
-    float angle;
-	std::pair<float, float> position;
-	    bool operator==(const Projectile& other) const {
-        return position == other.position && speed == other.speed && angle == other.angle;
-    }
-};
 
-class Vizualizer :public WithFFT
+class Vizualizer
 {
 public:
-	Vizualizer(const std::string& song_name);
+    Vizualizer();
 	~Vizualizer();
+    void load(WithFFT& fft);
 	void draw(sf::RenderWindow& window);
 	bool update();
-	Projectile* checkCollision(const Vector2f & playerPosition, float playerRadius);
+	//Projectile* checkCollision(const Vector2f & playerPosition, float playerRadius);
 	sf::CircleShape boss;
-
+    void setFFTResults(const std::vector<float>& results) {
+        fftResults = results;
+    }
 private:
-	const int num_of_stars  = 300;
+	//const int num_of_stars  = 300;
 	const float base_boss_radius = 50;
 	std::pair<float, float> base_boss_position = { WIDTH / 2,  1 };
-	float base_star_speed = static_cast<float>(1.01);
+	//float base_star_speed = static_cast<float>(1.01);
+    std::vector<float> fftResults; // Store FFT results for visualization
 
 	float update_by_sound(const int from, const int to, const int scale_factor);
 	void update_radius(const float update_value, sf::CircleShape& circle) const;
@@ -66,11 +55,11 @@ private:
 	/**
 	* Vector of stars that are used to compute positions.
 	*/
-	std::vector<Star> stars;
+	//std::vector<Star> stars;
 	/**
 	* Array of vertices representing stars. This is drawn.
 	*/
-	sf::VertexArray star_vertices;
+	//sf::VertexArray star_vertices;
 	/**
 	* Vertices used to draw halo around the boss.
 	*/
@@ -96,7 +85,7 @@ private:
 	*/
 	sf::Texture boss_texture;
 	//add the projection
-	std::vector<Projectile> projectiles;
+	//std::vector<Projectile> projectiles;
 	//bool for direction
 	float LeftRight = 1.0f;
 	bool YingYang = false;

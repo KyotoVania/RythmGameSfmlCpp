@@ -7,6 +7,7 @@
 
 #include "GUI/GUI.hpp"
 
+
 GUI::GUI() {
 
 }
@@ -51,14 +52,14 @@ void GUI::loadBeatmapPanel(Database& database)
     menu.loadBeatmaps(database);
 }
 
-void GUI::createMenu(Database& database)
+void GUI::createMenu(Database& database, std::vector<ButtonConfig>& 
 {
     //this function will create the menu
     //create a pair of int for the resolution
     pair<int, int> res;
     res.first = window.getSize().x;
     res.second = window.getSize().y;
-    menu.load(res, database);
+    menu.load(res, database, core);
 }
 
 void GUI::updateMenu()

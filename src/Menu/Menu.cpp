@@ -6,6 +6,7 @@
 */
 
 #include "Menu/Menu.hpp"
+#include "Core/Core.hpp"
 
 Menu::Menu()
 {
@@ -65,13 +66,16 @@ void Menu::loadTextures(Database& database)
 
 
 // Menu.cpp
-void Menu::load(const std::pair<int, int>& res, Database& database)
+void Menu::load(const std::pair<int, int>& res, Database& database, Core& core)
 {
     buttonConfigs = {
             {"Slide Left", [this](){ this->slideLeft(); }},
             {"Slide Right", [this](){ this->slideRight(); }},
             {"Exit", [](){ std::cout << "Exiting..." << std::endl; /* Add exit logic here */ }},
-            {"Analyse", [](){ std::cout << "Analysing..." << std::endl; /* Add analyse logic here */ }},
+            {"Analyse", [this, &core, &database](){
+                std::string beatmapPath = "path_to_your_beatmap";
+                this->onAnalyzeButtonClicked(core, beatmapPath);
+            }},
             {"Play", [](){std::cout<< "Playing..." << std::endl;}}
             // Add more configurations as needed
     };
@@ -170,3 +174,9 @@ void Menu::slideRight() {
     // You can add wrap-around logic here if you want the selection to loop back to the first panel when at the last panel.
 }
 
+
+void Menu::onAnalyzeButtonClicked(Core& core, const std::string& beatmapPath)
+{
+    // Trigger the Core class to load and analyze the beatmap
+    core.analyzeBeatmap(beatmapPath);
+}

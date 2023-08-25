@@ -11,43 +11,23 @@ using namespace sf;
 #define BUFFER_SIZE 16384
 
 #define BIG_BUFFER
-#pragma region Projectile
-/**
- *  Initializes drawables.
- */
-
-Projectile::Projectile(const float x, const float y, const float radius, const float speed,  float angle, bool yingOrYang)
-{
-	circle.setRadius(radius);
-	if (yingOrYang)
-	    circle.setFillColor(sf::Color::White);
-	else 
-		circle.setFillColor(sf::Color::Black);
-	yingYang = yingOrYang;
-    circle.setOrigin(radius, radius);
-    circle.setPosition(x, y);
-    this->speed = speed;
-    this->angle = angle;
-    this->radius = radius;
-    this->position = { x, y };
-}
-
-Projectile::~Projectile()
-{
-}
 
 
 #pragma region Vizualizer
 /**
  *  Initializes drawables.
  */
-Vizualizer::Vizualizer(const std::string& song_name) : WithFFT(song_name)
+Vizualizer::Vizualizer(){
+
+}
+
+void Vizualizer::load(WithFFT& fft)
 {
-	stars.resize(num_of_stars);
+/*	stars.resize(num_of_stars);
 	for(int i = 0; i < num_of_stars; i++)
 	{
 		stars[i] = (Star {1.f * (rand() % WIDTH),1.f* (rand() % HEIGHT), 0 });
-	}
+	}*/
 	//initialization of boss
 	boss_texture.loadFromFile("Resources/hoppy_no_bg.png");
 	boss_texture.setSmooth(true);
@@ -71,9 +51,10 @@ Vizualizer::Vizualizer(const std::string& song_name) : WithFFT(song_name)
 	progressBar.setPosition(sf::Vector2f(0, HEIGHT - 100));
 	
 	//initialization of stars
+    /*
 	star_vertices.setPrimitiveType(Lines);
 	star_vertices.resize(2*num_of_stars);
-
+*/
 	//inicialization of halo effect
 	for (int i = 0; i <4; i++)
 	{
@@ -98,7 +79,7 @@ Vizualizer::~Vizualizer() {}
  */
 void Vizualizer::draw(sf::RenderWindow& window)
 {
-	window.draw(star_vertices);
+//	window.draw(star_vertices);
 
 	for (auto&& layer :halo)
 	{
@@ -107,10 +88,12 @@ void Vizualizer::draw(sf::RenderWindow& window)
 	
 	window.draw(boss_background);
 	window.draw(boss);
+    /*
 	for (auto&& projectile : projectiles)
     {
         window.draw(projectile.circle);
     }
+    */
 	window.draw(progressBar);
 }
 /**
@@ -118,6 +101,7 @@ void Vizualizer::draw(sf::RenderWindow& window)
  */
 float Vizualizer::update_by_sound(const int from, const int to, const int scale_factor)
 {
+    /*
 	float sum = 0;
 	for (int i = from; i < to; ++i)
 	{
@@ -125,6 +109,8 @@ float Vizualizer::update_by_sound(const int from, const int to, const int scale_
 		sum += static_cast<float>(abs(bin[i]));
 	}
 	return (sum / (to - from)) / scale_factor;
+     */
+    return 0.0f;
 }
 /**
  * Helper function. Updates radius of given circle shape.
@@ -142,17 +128,17 @@ void Vizualizer::update_radius(const float update_value,sf::CircleShape& circle)
  */
 bool Vizualizer::update()
 {
-	WithFFT::update();
+	//WithFFT::update();
 	//cout << "update" << endl;
 	//update base_star_speed accoring to sub_bass frequencies
-
+/*
     float progress = offsetTime.asSeconds() / duration.asSeconds();
 
     progressBar.setSize(sf::Vector2f(progress * WIDTH, progressBar.getSize().y));
 	//check win conditions if sound is over
 	if (progress >=0.90)
 		return true;
-	base_star_speed = static_cast<float>(1.01) + update_by_sound(0, 60,100000000);
+	//base_star_speed = static_cast<float>(1.01) + update_by_sound(0, 60,100000000);
 	
 	//boss radius is mapped to human voice frequencies
 	float radius_update = 1.f + update_by_sound(90, 280, 5000000);
@@ -169,7 +155,8 @@ bool Vizualizer::update()
     float newPoseX = boss.getPosition().x + (boss_movement * movementFactor * LeftRight);
     boss.setPosition(newPoseX, boss.getPosition().y);
     boss_background.setPosition(boss.getPosition());
-
+    */
+    /*
 	//stars generation
 	star_vertices.clear();
 	for(auto& star: stars)
@@ -204,7 +191,9 @@ bool Vizualizer::update()
     		projectiles.erase(std::remove(projectiles.begin(), projectiles.end(), shoot), projectiles.end());
 		}
 	}
+         */
 	//generating halo around boss
+    /*
 	for (size_t i = 0; i < halo.size(); i++)
 	{
 		halo[i].clear();
@@ -239,15 +228,16 @@ bool Vizualizer::update()
         	        float angle = atan2(halo[i][j].position.y - boss.getPosition().y, halo[i][j].position.x - boss.getPosition().x);
 					float pose_x = halo[i][j].position.x + (boss.getRadius() + threshold) * cos(angle);
 					float pose_y = halo[i][j].position.y + (boss.getRadius() + threshold) * sin(angle);
-                	projectiles.push_back(Projectile(pose_x, pose_y, 5.0f, radius_update * 4, angle, YingYang));
+                	//projectiles.push_back(Projectile(pose_x, pose_y, 5.0f, radius_update * 4, angle, YingYang));
             	}
         	}
     	}
-	}
-	return false;
+    }
+	*/
+    return false;
 	
 }
-
+/*
 Projectile* Vizualizer::checkCollision(const Vector2f & playerPosition, float playerRadius)
 {
     for (auto& projectile : projectiles)
@@ -264,5 +254,5 @@ Projectile* Vizualizer::checkCollision(const Vector2f & playerPosition, float pl
     return nullptr; // Return nullptr if no collision occurred
 }
 
-
+*/
 #pragma endregion 	

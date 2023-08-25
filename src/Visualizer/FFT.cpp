@@ -13,41 +13,9 @@
 /**
  * Initializes drawables.
  */
-WithFFT::WithFFT(const std::string& song_name)
+WithFFT::WithFFT()
 {
-	ifstream ifs(path + song_name);
-	if (!ifs.good())
-	{
-		cout << "Song \"" << song_name << "\" is not in the database." << endl;
-		return;
-	}
 
-	buffer.loadFromFile(path + song_name);
-	song.setBuffer(buffer);
-
-	sample_count = buffer.getSampleCount();
-	sample_rate = buffer.getSampleRate() * buffer.getChannelCount();
-#ifdef BIG_BUFFER
-	if (BUFFER_SIZE < sample_count)
-	{
-		buffer_size = BUFFER_SIZE;
-	}
-	else
-	{
-		buffer_size = sample_count;
-	}
-#endif
-
-#ifndef BIG_BUFFER
-	buffer_size = WIDTH;
-#endif
-	
-	song.setLoop(true);
-	song.play();
-
-	samples.resize(buffer_size);
-	create_hamming_window();
-	duration = sf::seconds(static_cast<float>(sample_count) / sample_rate);
 }
 /**
  * Computes FFT on current song buffer values.
@@ -65,6 +33,48 @@ WithFFT::~WithFFT()
     // delete[] samples;
 
     // No need to perform explicit cleanup for other member variables, as they will be automatically cleaned up by their destructors.
+}
+
+void WithFFT::create()
+{
+
+}
+
+void WithFFT::loadMusic(const std::string &path)
+{
+    ifstream ifs(path);
+    if (!ifs.good())
+    {
+        cout << "Song \"" << path << "\" is not in the database." << endl;
+        return;
+    }
+
+    buffer.loadFromFile(path);
+    song.setBuffer(buffer);
+
+    sample_count = buffer.getSampleCount();
+    sample_rate = buffer.getSampleRate() * buffer.getChannelCount();
+#ifdef BIG_BUFFER
+    if (BUFFER_SIZE < sample_count)
+    {
+        buffer_size = BUFFER_SIZE;
+    }
+    else
+    {
+        buffer_size = sample_count;
+    }
+#endif
+
+#ifndef BIG_BUFFER
+    buffer_size = WIDTH;
+#endif
+
+    song.setLoop(true);
+    song.play();
+
+    samples.resize(buffer_size);
+    create_hamming_window();
+    duration = sf::seconds(static_cast<float>(sample_count) / sample_rate);
 }
 
 bool WithFFT::update()
@@ -187,5 +197,24 @@ void WithFFT::frequency_spectrum_round(std::vector<sf::VertexArray>& VAs,std::ve
 
 	//print the value for the each bar
 	//cout << VAs[0][0].position.x << endl;
+}
+
+
+int WithFFT::getDifficulties()
+{
+    // Placeholder logic to compute difficulty based on the music's FFT data.
+    // This is a simplistic approach and might need a more sophisticated algorithm.
+    float average_magnitude = 0;
+    for (const auto& val : fftResults)
+    {
+        average_magnitude += abs(val);
+    }
+    average_magnitude /= fftResults.size();
+
+    int difficulty = static_cast<int>(average_magnitude / 10000); // Arbitrary scaling factor
+    if (difficulty > 10) difficulty = 10;
+    if (difficulty < 1) difficulty = 1;
+
+    return difficulty;
 }
 #pragma endregion

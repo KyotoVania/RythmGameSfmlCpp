@@ -54,8 +54,15 @@ void Core::applyConfig() {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             gui.updateLoadingScreen(i);
             if (i == 10) {
-                gui.createMenu(database);
+                gui.createMenu(database, *this);
             }
+            if (i == 20) {
+                withFFT.create();
+            }
+            /*
+            if (i == 30) {
+                visualizer.create();
+            }*/
         }
     });
 
@@ -68,5 +75,23 @@ void Core::applyConfig() {
 
 void Core::run() {
     gui.loop(std::get<2>(gameStates));
+}
+
+void Core::analyzeBeatmap(const std::string& beatmapPath)
+{
+    // Step 1: Load the beatmap (music file)
+    withFFT.loadMusic(beatmapPath);
+
+    // Step 2: Perform the FFT
+    withFFT.performFFT();
+
+    // Step 3: Calculate the difficulty
+    int difficulty = withFFT.getDifficulties();
+
+    // Step 4: Print the calculated difficulty level
+    std::cout << "Calculated Difficulty Level: " << difficulty << std::endl;
+
+    // Step 5: Pass FFT results to Visualizer for visualization
+    visualizer.setFFTResults(withFFT.getFFTResults());
 }
 

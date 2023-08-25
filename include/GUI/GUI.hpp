@@ -17,13 +17,11 @@
 #include "GraphicElement/LoadingScreen.hpp"
 #include "Database/Database.hpp"
 #include "Menu/Menu.hpp"
+#include "Core/Core.hpp"
 
-enum GameState {
-    MENU,
-    GAME,
-    WELCOMEMENU,
-    EXIT
-};
+class Core;
+
+
 
 class GUI {
 	public:
@@ -33,7 +31,7 @@ class GUI {
         void loadBeatmapPanel(Database& database);
         void loadingScreenCreate();
         void updateLoadingScreen(int pourcent);
-        void createMenu(Database& database);
+        void createMenu(Database& database, Core& core);
         void updateMenu();
         void loop(int state);
         void drawState(int state);

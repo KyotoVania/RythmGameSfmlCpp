@@ -37,27 +37,34 @@ using namespace sf;
 class WithFFT
 {
 public:
-	WithFFT(const std::string& song_name);
+	WithFFT();
 	~WithFFT();
+    void create();
+    void loadMusic(const std::string& path);
+    void performFFT();
 	void fft(ComplAr& data);
 	void create_hamming_window();
+    int getDifficulties();
     sf::Time duration = sf::seconds(0);
 	sf::Time offsetTime = sf::seconds(0);
-	virtual void draw(sf::RenderWindow& window) = 0;
-	virtual bool update() = 0;
+	void draw(sf::RenderWindow& window);
+	bool update();
+    const std::vector<float>& getFFTResults() const {
+        return fftResults;
+    }
 protected:
 	sf::SoundBuffer buffer;
 	sf::Sound song;
-    
-	unsigned int sample_rate = 0;
+
+    unsigned int sample_rate = 0;
 	sf::Uint64 sample_count = 0;
 	sf::Uint64 buffer_size = 0;
+    std::vector<float> fftResults; // Store FFT results
 
 	const std::string path = "Resources/Songs/";
 	std::vector<Complex> samples;
 	ComplAr bin;
 	std::vector<float> window;
-
 	void frequency_spectrum_round(std::vector<sf::VertexArray>& VAs, std::vector<sf::Color>& colors,const std::vector<float>& heights, const sf::Vector2f& center, const float& radius, const int& from, const int& to);
 };
 
