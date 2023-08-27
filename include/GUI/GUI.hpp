@@ -17,7 +17,6 @@
 #include "GraphicElement/LoadingScreen.hpp"
 #include "Database/Database.hpp"
 #include "Menu/Menu.hpp"
-#include "Core/Core.hpp"
 
 class Core;
 
@@ -31,13 +30,17 @@ class GUI {
         void loadBeatmapPanel(Database& database);
         void loadingScreenCreate();
         void updateLoadingScreen(int pourcent);
-        void createMenu(Database& database, Core& core);
+        void createMenu(Database& database);
         void updateMenu();
         void loop(int state);
         void drawState(int state);
         void updateState(int state, sf::Event event);
         void createGame();
         void updateGame();
+        void setActive(bool active) {
+            window.setActive(active);
+        }
+
 protected:
         sf::RenderWindow window;
         sf::Event event;

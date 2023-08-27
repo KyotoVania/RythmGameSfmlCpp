@@ -66,15 +66,14 @@ void Menu::loadTextures(Database& database)
 
 
 // Menu.cpp
-void Menu::load(const std::pair<int, int>& res, Database& database, Core& core)
+void Menu::load(const std::pair<int, int>& res, Database& database)
 {
     buttonConfigs = {
-            {"Slide Left", [this](){ this->slideLeft(); }},
-            {"Slide Right", [this](){ this->slideRight(); }},
+            {"Left", [this](){ this->slideLeft(); }},
+            {"Right", [this](){ this->slideRight(); }},
             {"Exit", [](){ std::cout << "Exiting..." << std::endl; /* Add exit logic here */ }},
-            {"Analyse", [this, &core, &database](){
-                std::string beatmapPath = "path_to_your_beatmap";
-                this->onAnalyzeButtonClicked(core, beatmapPath);
+            {"Analyse", [this](){
+                this->onAnalyzeButtonClicked(getActualSongName());
             }},
             {"Play", [](){std::cout<< "Playing..." << std::endl;}}
             // Add more configurations as needed
@@ -175,8 +174,20 @@ void Menu::slideRight() {
 }
 
 
-void Menu::onAnalyzeButtonClicked(Core& core, const std::string& beatmapPath)
+void Menu::onAnalyzeButtonClicked(const std::string& beatmapPath)
 {
-    // Trigger the Core class to load and analyze the beatmap
-    core.analyzeBeatmap(beatmapPath);
+    std::cout << "Analyzing beatmap " << beatmapPath << std::endl;
+    //fft.loadMusic(beatmapPath); // Assuming fftMenu is an instance of FFT_Menu in the Menu class
+    fft.loadMusicMenu(beatmapPath);
+    std::cout << "load music finished" << std::endl;
+    int difficulty = fft.calculate_song_difficulty();
+    std::cout << "Difficulty : " << difficulty << std::endl;
+    //setDifficulty(difficulty);
+}
+
+std::string Menu::getActualSongName() {
+
+    std::string beatmapPath = "Resources/Beatmaps/" +
+     beatmapPanel[selectedPanelIndex].getBeatmapName();
+    return beatmapPath;
 }

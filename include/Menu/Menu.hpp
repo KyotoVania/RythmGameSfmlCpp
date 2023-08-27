@@ -23,6 +23,7 @@ using namespace std;
 #include "Database/Database.hpp"
 #include "GraphicElement/BeatmapPanel.hpp"
 #include "Visualizer/FFT.hpp"
+#include "Visualizer/FFT_Menu.hpp"
 //#include "GraphicElement/TriangleButton.hpp"
 //TODO: BANNER
 
@@ -32,17 +33,19 @@ class Menu {
 public:
     Menu();
     ~Menu();
-    void load(const std::pair<int, int>& res, Database& database,  std::vector<ButtonConfig>& buttonConfigs);
+    void load(const std::pair<int, int>& res, Database& database);
     void loadTextures(Database& database);
     void update(const sf::Event& event, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     void loadBeatmaps(Database& database);
     void slideLeft();
     void slideRight();
+    void onAnalyzeButtonClicked(const std::string& beatmapPath);
     struct ButtonConfig {
         std::string text;
         std::function<void()> onClick;
     };
+    std::string getActualSongName();
 protected:
     int selectedPanelIndex = 0; // Add this line
     map<string, Button> buttons;
@@ -55,7 +58,8 @@ protected:
     pair<int, int> _res = {0, 0};
     int theme = 0;
     std::vector<ButtonConfig> buttonConfigs;
-    void onAnalyzeButtonClicked(Core& core, const std::string& beatmapPath);
+    //add the fft
+    FFT_Menu fft;
 
 private:
 };

@@ -20,20 +20,8 @@ WithFFT::WithFFT()
 /**
  * Computes FFT on current song buffer values.
  */
-WithFFT::~WithFFT()
-{
-    // Stop the song playback if it is currently playing
-    song.stop();
 
-    // Optionally, release any resources held by the buffer
 
-    // If there are any dynamically allocated objects or arrays, delete them here
-    // (Ensure you have the necessary definitions and declarations for these objects)
-    // Example:
-    // delete[] samples;
-
-    // No need to perform explicit cleanup for other member variables, as they will be automatically cleaned up by their destructors.
-}
 
 void WithFFT::create()
 {
@@ -199,22 +187,4 @@ void WithFFT::frequency_spectrum_round(std::vector<sf::VertexArray>& VAs,std::ve
 	//cout << VAs[0][0].position.x << endl;
 }
 
-
-int WithFFT::getDifficulties()
-{
-    // Placeholder logic to compute difficulty based on the music's FFT data.
-    // This is a simplistic approach and might need a more sophisticated algorithm.
-    float average_magnitude = 0;
-    for (const auto& val : fftResults)
-    {
-        average_magnitude += abs(val);
-    }
-    average_magnitude /= fftResults.size();
-
-    int difficulty = static_cast<int>(average_magnitude / 10000); // Arbitrary scaling factor
-    if (difficulty > 10) difficulty = 10;
-    if (difficulty < 1) difficulty = 1;
-
-    return difficulty;
-}
 #pragma endregion

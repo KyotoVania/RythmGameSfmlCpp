@@ -21,6 +21,11 @@ public:
     void adjustPanel(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
     void adjustCover(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
     void adjustGrade(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
+    std::string getBeatmapName() {
+        std::string name = texts["title"].getString();
+        name.erase(0, 8);
+        return name;
+    }
 private:
     sf::Texture texture;
     std::map<std::string, sf::Sprite> sprites; // Replace individual sprites with a map

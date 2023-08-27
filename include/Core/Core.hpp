@@ -14,6 +14,8 @@
 #include "Database/Database.hpp"
 #include "Visualizer/Vizualizer.hpp"
 #include "Visualizer/FFT.hpp"
+#include "Visualizer/FFT_Menu.hpp"
+#include "Visualizer/FFT_Game.hpp"
 #include <iostream>
 #include <future>
 #include <thread>
@@ -41,7 +43,7 @@ private:
     GUI gui;
     Database database;
     Vizualizer visualizer;
-    WithFFT withFFT;
+    FFT_Game fft;
     std::tuple<bool, GameState, GameState> gameStates;
 };
 

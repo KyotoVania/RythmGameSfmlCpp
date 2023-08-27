@@ -7,6 +7,12 @@
 
 #include "GUI/GUI.hpp"
 
+enum GameState {
+    MENU,
+    GAME,
+    WELCOMEMENU,
+    EXIT
+};
 
 GUI::GUI() {
 
@@ -52,14 +58,14 @@ void GUI::loadBeatmapPanel(Database& database)
     menu.loadBeatmaps(database);
 }
 
-void GUI::createMenu(Database& database, std::vector<ButtonConfig>& 
+void GUI::createMenu(Database& database)
 {
     //this function will create the menu
     //create a pair of int for the resolution
     pair<int, int> res;
     res.first = window.getSize().x;
     res.second = window.getSize().y;
-    menu.load(res, database, core);
+    menu.load(res, database);
 }
 
 void GUI::updateMenu()

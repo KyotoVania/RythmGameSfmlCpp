@@ -46,28 +46,35 @@ void Core::applyConfig() {
     gui.load(config.getGUIConfig());
     cout << "loaded gui" << endl;
     gui.loadingScreenCreate();
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    gui.setActive(false);
 
     // Start loading assets in a separate thread
     auto future = std::async(std::launch::async, [this](){
+        gui.setActive(true);
         for (int i = 0; i <= 100; i++) {
             // Simulate loading assets
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             gui.updateLoadingScreen(i);
             if (i == 10) {
-                gui.createMenu(database, *this);
-            }
+                gui.createMenu(database);
+            }/*
             if (i == 20) {
                 withFFT.create();
             }
+            */
             /*
             if (i == 30) {
                 visualizer.create();
             }*/
         }
+        gui.setActive(false);
+
     });
 
     // Wait for the loading to finish
     future.wait();
+    gui.setActive(true);
     cout << "loaded assets" << endl;
     // Start the main loop
     // for the moment, the menu is the main loop
@@ -80,18 +87,19 @@ void Core::run() {
 void Core::analyzeBeatmap(const std::string& beatmapPath)
 {
     // Step 1: Load the beatmap (music file)
-    withFFT.loadMusic(beatmapPath);
+    fft.loadMusic(beatmapPath);
 
     // Step 2: Perform the FFT
-    withFFT.performFFT();
+    //withFFT.performFFT();
 
     // Step 3: Calculate the difficulty
-    int difficulty = withFFT.getDifficulties();
+   int difficulty = 42;
+//    menu.getDifficulty();
 
     // Step 4: Print the calculated difficulty level
     std::cout << "Calculated Difficulty Level: " << difficulty << std::endl;
 
     // Step 5: Pass FFT results to Visualizer for visualization
-    visualizer.setFFTResults(withFFT.getFFTResults());
+    visualizer.setFFTResults(fft.getFFTResults());
 }
 

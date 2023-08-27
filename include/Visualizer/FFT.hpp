@@ -37,22 +37,19 @@ using namespace sf;
 class WithFFT
 {
 public:
-	WithFFT();
-	~WithFFT();
+    WithFFT();
+	virtual ~WithFFT() = default;
     void create();
     void loadMusic(const std::string& path);
-    void performFFT();
 	void fft(ComplAr& data);
 	void create_hamming_window();
     int getDifficulties();
     sf::Time duration = sf::seconds(0);
 	sf::Time offsetTime = sf::seconds(0);
-	void draw(sf::RenderWindow& window);
 	bool update();
     const std::vector<float>& getFFTResults() const {
         return fftResults;
     }
-protected:
 	sf::SoundBuffer buffer;
 	sf::Sound song;
 

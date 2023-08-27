@@ -126,7 +126,7 @@ void BeatmapPanel::adjust(float scale, float opacity, const sf::Vector2f& offset
         text.second.setCharacterSize(textSize * scale);
         //text.second.setColor(sf::Color(255, 255, 255, opacity));
     }
-    std::cout << "sprite[cover] position : " << sprites["cover"].getPosition().x << " " << sprites["cover"].getPosition().y << std::endl;
+    //std::cout << "sprite[cover] position : " << sprites["cover"].getPosition().x << " " << sprites["cover"].getPosition().y << std::endl;
     texts["title"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, sprites["cover"].getPosition().y);
     texts["artist"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, texts["title"].getPosition().y + PercentY * 3);
     texts["difficulty"].setPosition(sprites["cover"].getPosition().x + sprites["cover"].getGlobalBounds().width + PercentX, texts["artist"].getPosition().y + PercentY * 3);
