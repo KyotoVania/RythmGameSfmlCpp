@@ -54,4 +54,14 @@ fclean: clean
 	@echo "$(RED)Removing object files...$(NC)"
 	@rm -rf $(OBJDIR)
 
-.PHONY: all clean debug re fclean
+check:
+	@echo "Source files:" $(SRCS)
+	@echo "Object files:" $(OBJS)
+
+distcheck: check
+	@echo "Source directory:" $(SRCDIR)
+	@echo "Object directory:" $(OBJDIR)
+	@echo "Binary directory:" $(BINDIR)
+	@echo "Binary name:" $(EXEC)
+
+.PHONY: all clean debug re fclean check distcheck

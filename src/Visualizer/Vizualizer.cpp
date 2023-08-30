@@ -235,7 +235,6 @@ bool Vizualizer::update()
     }
 	*/
     return false;
-	
 }
 /*
 Projectile* Vizualizer::checkCollision(const Vector2f & playerPosition, float playerRadius)
@@ -253,6 +252,5 @@ Projectile* Vizualizer::checkCollision(const Vector2f & playerPosition, float pl
 
     return nullptr; // Return nullptr if no collision occurred
 }
-
 */
 #pragma endregion 	

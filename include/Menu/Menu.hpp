@@ -41,23 +41,21 @@ public:
     void slideLeft();
     void slideRight();
     void onAnalyzeButtonClicked(const std::string& beatmapPath);
-    struct ButtonConfig {
-        std::string text;
-        std::function<void()> onClick;
-    };
+
     std::string getActualSongName();
+    void setDifficulty(int difficulty);
 protected:
     int selectedPanelIndex = 0; // Add this line
     map<string, Button> buttons;
+    map<string, ButtonConfig> buttonConfigs;
     map<string, sf::Text> texts;
     map<string, sf::Texture> textures;
     map<string, sf::Sprite> sprites;
     //add the beatmap panel
-    std::vector<BeatmapPanel> beatmapPanel;
+    std::vector<std::unique_ptr<BeatmapPanel>> beatmapPanel;
     map<string, sf::Font> fonts;
     pair<int, int> _res = {0, 0};
     int theme = 0;
-    std::vector<ButtonConfig> buttonConfigs;
     //add the fft
     FFT_Menu fft;
 

@@ -19,7 +19,10 @@ enum ButtonState {
     PRESSED,
     DISABLED
 };
-
+typedef struct ButtonConfig_s {
+    std::string text;
+    std::function<void()> onClick;
+} ButtonConfig;
 class Button {
 public:
     Button();

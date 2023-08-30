@@ -9,6 +9,7 @@
 #include <utility>
 #include "Beatmap/Beatmap.hpp"
 #include "Database/Database.hpp"
+#include "GraphicElement/Button.hpp"
 class BeatmapPanel {
 public:
     BeatmapPanel();
@@ -21,16 +22,25 @@ public:
     void adjustPanel(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
     void adjustCover(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
     void adjustGrade(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
+    void adjustDifficulty(int difficulty);
+    int getDifficultyUser() {
+        return difficultyUser;
+    }
     std::string getBeatmapName() {
         std::string name = texts["title"].getString();
         name.erase(0, 8);
         return name;
     }
+    void handleEvent(const sf::Event& event, const sf::RenderWindow& window);
+    //void adjustDifficultyUserPlus();
 private:
     sf::Texture texture;
     std::map<std::string, sf::Sprite> sprites; // Replace individual sprites with a map
-    sf::Texture textureCover;
+    std::map<string, Button> buttons;
+    map<string, ButtonConfig> buttonConfigs;
+    //sf::Texture textureCover;
     std::map<std::string, sf::Text> texts; // Map for text elements
+    int difficultyUser;
     sf::Vector2f position;
     sf::Vector2f size;
     int textSize;

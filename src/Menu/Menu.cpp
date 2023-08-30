@@ -68,16 +68,14 @@ void Menu::loadTextures(Database& database)
 // Menu.cpp
 void Menu::load(const std::pair<int, int>& res, Database& database)
 {
-    buttonConfigs = {
-            {"Left", [this](){ this->slideLeft(); }},
-            {"Right", [this](){ this->slideRight(); }},
-            {"Exit", [](){ std::cout << "Exiting..." << std::endl; /* Add exit logic here */ }},
-            {"Analyse", [this](){
-                this->onAnalyzeButtonClicked(getActualSongName());
-            }},
-            {"Play", [](){std::cout<< "Playing..." << std::endl;}}
-            // Add more configurations as needed
-    };
+    buttonConfigs["Left"] = {"Left", [this](){ this->slideLeft(); }};
+    buttonConfigs["Right"] = {"Right", [this](){ this->slideRight(); }};
+    buttonConfigs["Exit"] = {"Exit", [](){ std::cout << "Exiting..." << std::endl; /* Add exit logic here */ }};
+    buttonConfigs["Analyse"] = {"Analyse", [this](){
+        this->onAnalyzeButtonClicked(getActualSongName());
+    }};
+    buttonConfigs["Play"] = {"Play", [](){std::cout<< "Playing..." << std::endl;}};
+    buttonConfigs["Options"] = {"Options", [](){std::cout<< "Options..." << std::endl;}};
     // Load the background image
     loadTextures(database);
     sf::Sprite background(textures["background"]);
@@ -88,20 +86,19 @@ void Menu::load(const std::pair<int, int>& res, Database& database)
         std::cout << "Error loading font" << std::endl;
         // Handle error...
     }
+    int i = 1;
+    for (const auto& [key, config] : buttonConfigs) {
+        std::string buttonName = "button" + std::to_string(i);
+        buttons.emplace(buttonName, Button(textures["Btn0" + std::to_string(i)],
+                                           sf::Vector2f(10 + i * 10, 80),
+                                           config.onClick, res));
+        buttons[buttonName].setText(config.text, fonts["sansation"], 30);
+        ++i;
+    }
+
 
     // Load the bottom buttons
-    for (int i = 1; i <= 6; ++i) {
-        std::string buttonName = "button" + std::to_string(i);
 
-        if (i - 1 < buttonConfigs.size()) { // Ensure we don't go out of bounds
-            buttons.emplace(buttonName, Button(textures["Btn0" + std::to_string(i)]
-                    ,sf::Vector2f(10 + i * 10, 80), buttonConfigs[i-1].onClick, res));
-            buttons[buttonName].setText(buttonConfigs[i-1].text, fonts["sansation"], 30);
-        } else {
-            buttons.emplace(buttonName, Button(textures["Btn0" + std::to_string(i)], sf::Vector2f(10 + i * 10, 80), [](){}, res)); // Default empty function
-            buttons[buttonName].setText(std::to_string(i), fonts["sansation"], 30);
-        }
-    }
     this->_res = res;
     loadBeatmaps(database);
 }
@@ -116,10 +113,9 @@ void Menu::loadBeatmaps(Database& database) {
         }
         
         // Create a BeatmapPanel object and add it to the beatmapPanel vector
-        BeatmapPanel panel(textures["MainPanel01"], textures["ArrowsLeft"], textures["ArrowsRight"],
-                           textures[beatmap.getFolderPath()],
-                           sf::Vector2f(5, 5), _res, beatmap, fonts["sansation"]);
-        beatmapPanel.push_back(panel);
+        beatmapPanel.push_back(std::make_unique<BeatmapPanel>(textures["MainPanel01"], textures["ArrowsLeft"], textures["ArrowsRight"],
+                                                               textures[beatmap.getFolderPath()],
+                                                               sf::Vector2f(5, 5), _res, beatmap, fonts["sansation"]));
     }
 }
 
@@ -129,17 +125,25 @@ void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
     for (auto& button : buttons) {
         button.second.handleEvent(event, window);
     }
-
-    // Determine the selected panel
     int selectedPanel = selectedPanelIndex;
+
+    //we need to only check the panel that is selected
+    int y = 0;
+    for (auto& panel : beatmapPanel) {
+        if (y == selectedPanel) {
+            panel->handleEvent(event, window);
+        }
+        ++y;
+    }
+    // Determine the selected panel
     // Adjust the panels
     for (int i = 0; i < beatmapPanel.size(); ++i) {
         if (i < selectedPanel) {
-            beatmapPanel[i].adjust(0.5f, 128, sf::Vector2f(2, 4), _res);
+            beatmapPanel[i]->adjust(0.5f, 128, sf::Vector2f(2, 4), _res);
         } else if (i > selectedPanel) {
-            beatmapPanel[i].adjust(0.5f, 128, sf::Vector2f(8, 4), _res);
+            beatmapPanel[i]->adjust(0.5f, 128, sf::Vector2f(8, 4), _res);
         } else {
-            beatmapPanel[i].adjust(0.8f, 255, sf::Vector2f(5, 5), _res);
+            beatmapPanel[i]->adjust(0.8f, 255, sf::Vector2f(5, 5), _res);
         }
     }
 }
@@ -155,7 +159,7 @@ void Menu::draw(sf::RenderWindow& window)
     // Draw the panels in reverse order
    // std::cout << "there is x beatpmap : " + beatmapPanel.size() << std::endl;
     for (int i = beatmapPanel.size() - 1; i >= 0; --i) {
-        beatmapPanel[i].draw(window);
+        beatmapPanel[i]->draw(window);
     }
 }
 
@@ -182,12 +186,16 @@ void Menu::onAnalyzeButtonClicked(const std::string& beatmapPath)
     std::cout << "load music finished" << std::endl;
     int difficulty = fft.calculate_song_difficulty();
     std::cout << "Difficulty : " << difficulty << std::endl;
-    //setDifficulty(difficulty);
+    setDifficulty(difficulty);
 }
 
 std::string Menu::getActualSongName() {
 
     std::string beatmapPath = "Resources/Beatmaps/" +
-     beatmapPanel[selectedPanelIndex].getBeatmapName();
+     beatmapPanel[selectedPanelIndex]->getBeatmapName();
     return beatmapPath;
+}
+
+void Menu::setDifficulty(int difficulty) {
+    this->beatmapPanel[selectedPanelIndex]->adjustDifficulty(difficulty);
 }
