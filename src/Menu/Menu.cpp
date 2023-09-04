@@ -74,7 +74,7 @@ void Menu::load(const std::pair<int, int>& res, Database& database)
     buttonConfigs["Analyse"] = {"Analyse", [this](){
         this->onAnalyzeButtonClicked(getActualSongName());
     }};
-    buttonConfigs["Play"] = {"Play", [](){std::cout<< "Playing..." << std::endl;}};
+    buttonConfigs["Play"] = {"Play", [this](){this->state = PLAYWAITING;}};
     buttonConfigs["Options"] = {"Options", [](){std::cout<< "Options..." << std::endl;}};
     // Load the background image
     loadTextures(database);
@@ -120,7 +120,7 @@ void Menu::loadBeatmaps(Database& database) {
 }
 
 
-void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
+int Menu::update(const sf::Event& event, const sf::RenderWindow& window)
 {
     for (auto& button : buttons) {
         button.second.handleEvent(event, window);
@@ -146,6 +146,7 @@ void Menu::update(const sf::Event& event, const sf::RenderWindow& window)
             beatmapPanel[i]->adjust(0.8f, 255, sf::Vector2f(5, 5), _res);
         }
     }
+    return this->state;
 }
 
 
@@ -198,4 +199,8 @@ std::string Menu::getActualSongName() {
 
 void Menu::setDifficulty(int difficulty) {
     this->beatmapPanel[selectedPanelIndex]->adjustDifficulty(difficulty);
+}
+
+int Menu::getDifficulty() {
+    return this->beatmapPanel[selectedPanelIndex]->getDifficultyUser();
 }

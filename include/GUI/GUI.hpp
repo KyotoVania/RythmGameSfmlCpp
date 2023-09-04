@@ -33,12 +33,17 @@ class GUI {
         void createMenu(Database& database);
         void updateMenu();
         void loop(int state);
-        void drawState(int state);
-        void updateState(int state, sf::Event event);
         void createGame();
         void updateGame();
+        void drawGame();
         void setActive(bool active) {
             window.setActive(active);
+        }
+        sf::RenderWindow& getWindow() {
+            return window;
+        }
+        sf::Event& getEvent() {
+            return event;
         }
 
 protected:
@@ -46,7 +51,6 @@ protected:
         sf::Event event;
         sf::Vector2i mousePos;
         sf::Vector2f mousePosF;
-        Menu menu;
         LoadingScreen loadingScreen;
 
 private:

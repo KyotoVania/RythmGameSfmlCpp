@@ -26,8 +26,11 @@ using namespace std;
 #include "Visualizer/FFT_Menu.hpp"
 //#include "GraphicElement/TriangleButton.hpp"
 //TODO: BANNER
-
-class Core;
+enum MenuState {
+    SONGSELECT,
+    PLAYWAITING,
+    BACKWAITING
+};
 
 class Menu {
 public:
@@ -35,13 +38,13 @@ public:
     ~Menu();
     void load(const std::pair<int, int>& res, Database& database);
     void loadTextures(Database& database);
-    void update(const sf::Event& event, const sf::RenderWindow& window);
+    int update(const sf::Event& event, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     void loadBeatmaps(Database& database);
     void slideLeft();
     void slideRight();
     void onAnalyzeButtonClicked(const std::string& beatmapPath);
-
+    int getDifficulty();
     std::string getActualSongName();
     void setDifficulty(int difficulty);
 protected:
@@ -54,11 +57,11 @@ protected:
     //add the beatmap panel
     std::vector<std::unique_ptr<BeatmapPanel>> beatmapPanel;
     map<string, sf::Font> fonts;
+    int state = SONGSELECT;
     pair<int, int> _res = {0, 0};
     int theme = 0;
     //add the fft
     FFT_Menu fft;
-
 private:
 };
 

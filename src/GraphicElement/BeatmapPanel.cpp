@@ -182,6 +182,10 @@ void BeatmapPanel::handleEvent(const sf::Event& event, const sf::RenderWindow& w
         button.second.handleEvent(event, window);
 }
 
+int BeatmapPanel::getDifficultyUser() {
+    return this->difficultyUser;
+}
+
 /*
 void BeatmapPanel::handleButtonClick(const sf::Vector2f& mousePosition) {
     if (leftArrowButton.isClicked(mousePosition)) {

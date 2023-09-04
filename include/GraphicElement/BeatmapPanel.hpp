@@ -23,9 +23,7 @@ public:
     void adjustCover(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
     void adjustGrade(float scale, float opacity, const sf::Vector2f& offset, std::pair<int, int> res);
     void adjustDifficulty(int difficulty);
-    int getDifficultyUser() {
-        return difficultyUser;
-    }
+    int getDifficultyUser();
     std::string getBeatmapName() {
         std::string name = texts["title"].getString();
         name.erase(0, 8);

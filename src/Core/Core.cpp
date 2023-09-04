@@ -13,7 +13,7 @@ Core::Core() {
     //the first gamestate is the previous gamestate
     //the second is the current gamestate
 
-    gameStates = std::make_tuple(false, GameState::EXIT, GameState::MENU);
+    gameStates = std::make_tuple(true, GameState::ENDT, GameState::MENU, GameState::ENDT);
 
     loadConfigAndDatabase();
     applyConfig();
@@ -57,16 +57,18 @@ void Core::applyConfig() {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             gui.updateLoadingScreen(i);
             if (i == 10) {
-                gui.createMenu(database);
-            }/*
-            if (i == 20) {
-                withFFT.create();
+                //gui.createMenu(database);
+                menu.load(make_pair(gui.getWindow().getSize().x, gui.getWindow().getSize().y), database);
             }
-            */
-            /*
+            if (i == 20) {
+                game.loadTextures();
+            }
             if (i == 30) {
-                visualizer.create();
-            }*/
+                game.loadEntities();
+            }
+            if (i == 40) {
+                game.loadTexts();
+            }
         }
         gui.setActive(false);
 
@@ -81,25 +83,87 @@ void Core::applyConfig() {
 }
 
 void Core::run() {
-    gui.loop(std::get<2>(gameStates));
+    while (gui.getWindow().isOpen()){
+        sf::Event event = gui.getEvent();
+        while (gui.getWindow().pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                gui.getWindow().close();
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Escape) {
+                    gui.getWindow().close();
+                }
+            }
+            if (event.type == sf::Event::Resized) {
+                gui.getWindow().setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+            }
+            updateState(event);
+
+        }
+        gui.getWindow().clear();
+        drawState();
+        //gui.drawState(std::get<2>(gameStates));
+        gui.getWindow().display();
+    }
 }
 
-void Core::analyzeBeatmap(const std::string& beatmapPath)
-{
-    // Step 1: Load the beatmap (music file)
-    fft.loadMusic(beatmapPath);
-
-    // Step 2: Perform the FFT
-    //withFFT.performFFT();
-
-    // Step 3: Calculate the difficulty
-   int difficulty = 42;
-//    menu.getDifficulty();
-
-    // Step 4: Print the calculated difficulty level
-    std::cout << "Calculated Difficulty Level: " << difficulty << std::endl;
-
-    // Step 5: Pass FFT results to Visualizer for visualization
-    visualizer.setFFTResults(fft.getFFTResults());
+void Core::updateState(sf::Event event) {
+    //this function will update the state
+    transition();
+    //we will update the current gamestate
+    switch (std::get<2>(gameStates)) {
+        case GameState::MENU:
+            if (menu.update(event, gui.getWindow()) == 1) {
+                std::get<3>(gameStates) = GameState::GAME;
+                std::get<0>(gameStates) = false;
+            }
+            //gui.updateMenu();
+            break;
+        case GameState::GAME:
+            game.update();
+            break;
+        case GameState::EXIT:
+            gui.getWindow().close();
+            break;
+        default:
+            break;
+    }
 }
 
+void Core::drawState() {
+    //this function will draw the state
+    switch (std::get<2>(gameStates)) {
+        case GameState::MENU:
+            menu.draw(gui.getWindow());
+            break;
+        case GameState::GAME:
+            game.draw(gui.getWindow());
+            break;
+        case GameState::EXIT:
+            gui.getWindow().close();
+            break;
+        default:
+            break;
+    }
+}
+
+void Core::transition() {
+    //this function will do the transition
+    //we will check if the transition is done
+    if (std::get<0>(gameStates) == false) {
+        //the transition is not done
+        //we will update the transition
+        std::get<0>(gameStates) = true;
+        if (std::get<3>(gameStates) == GameState::GAME) {
+            //we will update the gamestate
+           // game.reset();
+            game.setDifficulty(menu.getDifficulty());
+            //game.loadBeatmap(menu.getActualSongName());
+        } else {
+            //we will update the gamestate
+        }
+        std::get<2>(gameStates) = std::get<3>(gameStates);
+        std::get<1>(gameStates) = std::get<3>(gameStates);
+        std::get<3>(gameStates) = GameState::ENDT;
+    }
+}

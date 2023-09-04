@@ -50,14 +50,7 @@ void GUI::updateLoadingScreen(int percent) {
     loadingScreen.draw(window);
     window.display();
 }
-
-void GUI::loadBeatmapPanel(Database& database)
-{
-    //this function will create the beatmap panel
-    std::cout << "Loading beatmapsPanel..." << std::endl;
-    menu.loadBeatmaps(database);
-}
-
+/*
 void GUI::createMenu(Database& database)
 {
     //this function will create the menu
@@ -67,37 +60,14 @@ void GUI::createMenu(Database& database)
     res.second = window.getSize().y;
     menu.load(res, database);
 }
+ */
 
-void GUI::updateMenu()
-{
-    //this function will update the menu
-    //update the mouse position
-    mousePos = sf::Mouse::getPosition(window);
-    mousePosF = sf::Vector2f(mousePos.x, mousePos.y);
-    //update the menu
-    menu.update(event, window);
-    window.clear();
-    menu.draw(window);
-    window.display();
-}
-void GUI::updateState(int state, sf::Event event)
-{
-    if (state == MENU){
-        menu.update(event, window);
-    } else if (state == GAME){
-        //game.update(event, window);
-    }
-}
 
-void GUI::drawState(int state)
-{
-    if (state == MENU){
-        menu.draw(window);
-    } else if (state == GAME){
-        //game.draw(window);
-    }
-}
 
+void GUI::updateGame(){
+
+}
+/*
 void GUI::loop(int state)
 {
     //for the moment only call the menu update
@@ -113,4 +83,6 @@ void GUI::loop(int state)
         drawState(state);
         window.display();
     }
+
 }
+*/

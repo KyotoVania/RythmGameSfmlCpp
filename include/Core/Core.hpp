@@ -16,6 +16,8 @@
 #include "Visualizer/FFT.hpp"
 #include "Visualizer/FFT_Menu.hpp"
 #include "Visualizer/FFT_Game.hpp"
+#include "Menu/Menu.hpp"
+#include "Game/Game.hpp"
 #include <iostream>
 #include <future>
 #include <thread>
@@ -27,7 +29,8 @@ enum GameState {
     MENU,
     GAME,
     WELCOMEMENU,
-    EXIT
+    EXIT,
+    ENDT
 };
 class Core {
 public:
@@ -35,16 +38,26 @@ public:
     ~Core();
     void run();
     void analyzeBeatmap(const std::string& beatmapPath);
-
+    void updateState(sf::Event event);
+    void drawState();
+    void transition();
 private:
     void loadConfigAndDatabase();
     void applyConfig();
     Config config;
     GUI gui;
+    Menu menu;
     Database database;
     Vizualizer visualizer;
     FFT_Game fft;
-    std::tuple<bool, GameState, GameState> gameStates;
+    Game game;
+    /*we will use a truple logic of gamestates
+    the first bool will be used to know if the transition is done
+    the first gamestate is the previous gamestate
+    the second is the current gamestate
+    the third is the next gamestate
+    */
+     std::tuple<bool, GameState, GameState, GameState> gameStates;
 };
 
 
